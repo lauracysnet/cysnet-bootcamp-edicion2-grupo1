@@ -1,0 +1,7 @@
+{
+    "objectscript.conn": {
+        "server": "iris-local",
+        "ns": "CLINICA_DENTAL",
+        "active": true
+    }
+}
