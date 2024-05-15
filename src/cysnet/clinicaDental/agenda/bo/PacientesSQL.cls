@@ -77,14 +77,68 @@ Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.bajaPacienteRequest, Ou
     quit $$$OK
 }
 
+Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.ModificarPacienteResponse) As %Status
+{
+    #dim sc As %Status = $$$OK
+    #dim stm As %SQL.Statement
+    #dim rs As %SQL.StatementResult
+    set pResponse = ##class(cysnet.clinicaDental.msg.ModificarPacienteResponse).%New()
+    set pResponse.exito = 1
+    set pResponse.mensaje = "Actualizado correctamente"
+    Try{
+        if (pRequest.conservarCorreo) {
+            &sql(UPDATE cysnet_clinicaDental_data.Pacientes SET nombre = :pRequest.nombre, apellidos = :pRequest.apellidos, email = :pRequest.emailAcutal, permiteNotificaciones = :pRequest.permiteNotificaciones WHERE email = :pRequest.emailAcutal)
+            if (SQLCODE = 0) {
+                // La instrucción ha ido bien
+            } else {
+                set pResponse.exito = 0
+                set pResponse.mensaje = $System.SQL.Functions.SQLCODE(SQLCODE)
+            }
+        } else {
+            set stm = ##class(%SQL.Statement).%New()
+            set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.NuevoEmail_"'")
+            if ($$$ISOK(sc)) {
+                set rs = stm.%Execute()
+                if (rs.%Next(.sc)) {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "Ya esxiste paciente con el correo ingresado"
+                    return $$$OK
+                } 
+            }
+            &sql(UPDATE cysnet_clinicaDental_data.Pacientes SET nombre = :pRequest.nombre, apellidos = :pRequest.apellidos, email = :pRequest.NuevoEmail, permiteNotificaciones = :pRequest.permiteNotificaciones WHERE email = :pRequest.emailAcutal)
+            if (SQLCODE = 0) {
+                // La instrucción ha ido bien
+            } else {
+                set pResponse.exito = 0
+                set pResponse.mensaje = $System.SQL.Functions.SQLCODE(SQLCODE)
+            }
+        }
+    } Catch (err) {
+       // Si ha ocurrido un error, crear el objeto Status:
+        if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
+	        set sc = err.status
+        } else {
+	        set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
+        }
+    }
+    if ($$$ISERR(sc)) {
+        set pResponse.exito = 0
+        set pResponse.mensaje = "paila"
+    }
+    quit sc
+}
+
 XData MessageMap
 {
 <MapItems>
     <MapItem MessageType="cysnet.clinicaDental.msg.nuevoPacienteRequest">
     <Method>crearPaciente</Method>
     </MapItem>
-        <MapItem MessageType="cysnet.clinicaDental.msg.bajaPacienteRequest">
+    <MapItem MessageType="cysnet.clinicaDental.msg.bajaPacienteRequest">
     <Method>bajaPaciente</Method>
+    </MapItem>
+    <MapItem MessageType="cysnet.clinicaDental.msg.ModificarPacienteRequest">
+    <Method>modificarPaciente</Method>
     </MapItem>
 </MapItems>
 }
