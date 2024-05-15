@@ -28,9 +28,22 @@ Method nuevoPaciente(nombre As %String, apellidos As %String, email As %String, 
     set req.baja = baja
 
     do ..SendRequestSync("ProcesoPacientes", req, .rsp)
-	quit rsp
 
-	Quit "prueba"
+	quit rsp
+}
+
+/// Da de baja un paciente. Para darlo de baja no eliminarlo, actualizar el campo baja a 1
+Method bajaPaciente(email As %String) As cysnet.clinicaDental.msg.bajaPacienteResponse [ WebMethod ]
+{
+    #dim req As cysnet.clinicaDental.msg.bajaPacienteRequest
+	#dim rsp As cysnet.clinicaDental.msg.bajaPacienteResponse
+
+    set req = ##class(cysnet.clinicaDental.msg.bajaPacienteRequest).%New()
+    set req.email = email
+
+    do ..SendRequestSync("ProcesoPacientes", req, .rsp)
+
+	quit rsp
 }
 
 }

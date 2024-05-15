@@ -1,7 +1,7 @@
 Class cysnet.clinicaDental.agenda.bo.PacientesSQL Extends Ens.BusinessOperation
 {
 
-/// Método que crea una nueva paciente
+/// Método que crea un nueva paciente
 Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.nuevoPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
@@ -42,11 +42,49 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, 
     quit $$$OK
 }
 
+/// Método que crea una nueva paciente
+Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.bajaPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.bajaPacienteResponse) As %Status
+{
+    #dim sc As %Status = $$$OK
+    #dim stm As %SQL.Statement
+    #dim rs As %SQL.StatementResult
+    set pResponse = ##class(cysnet.clinicaDental.msg.bajaPacienteResponse).%New()
+    set pResponse.exito = 1
+    set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
+    Try {
+        set stm = ##class(%SQL.Statement).%New()
+        set sc = stm.%Prepare("UPDATE cysnet_clinicaDental_data.Pacientes SET baja = 1 WHERE email = "_"'"_pRequest.email_"'")
+        if ($$$ISOK(sc)) {
+            set rs = stm.%Execute()
+            if (rs.%Next(.sc)) {
+                set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
+            }
+        } 
+    }
+    Catch ex {
+             // Si ha ocurrido un error, crear el objeto Status:
+        if (ex.%ClassName(1)="common.err.exception") && ($$$ISERR(ex.status)) {
+	        set sc = ex.status
+        } else {
+	        set sc = $System.Status.Error(ex.Code,ex.Name,ex.Location,ex.InnerException)
+        }
+    }
+    if ($$$ISERR(sc)) {
+        set pResponse.exito = 0
+        set pResponse.mensajeError = $System.Status.GetErrorText(sc)
+    }
+
+    quit $$$OK
+}
+
 XData MessageMap
 {
 <MapItems>
     <MapItem MessageType="cysnet.clinicaDental.msg.nuevoPacienteRequest">
     <Method>crearPaciente</Method>
+    </MapItem>
+        <MapItem MessageType="cysnet.clinicaDental.msg.bajaPacienteRequest">
+    <Method>bajaPaciente</Method>
     </MapItem>
 </MapItems>
 }
