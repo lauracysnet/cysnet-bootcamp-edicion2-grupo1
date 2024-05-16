@@ -17,7 +17,7 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, 
             set rs = stm.%Execute()
             if (rs.%Next(.sc)) {
                 set pResponse.exito = 0
-                set pResponse.mensajeError = "Ya esxiste paciente con el correo ingresado"
+                set pResponse.mensajeError = "Ya existe paciente con el correo ingresado"
                 return $$$OK
             }
         }
@@ -103,7 +103,7 @@ Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteR
                 set rs = stm.%Execute()
                 if (rs.%Next(.sc)) {
                     set pResponse.exito = 0
-                    set pResponse.mensaje = "Ya esxiste paciente con el correo ingresado"
+                    set pResponse.mensaje = "Ya existe paciente con el correo ingresado"
                     return $$$OK
                 } 
             }
