@@ -5,7 +5,7 @@ Property nombre As %String;
 
 Property apellidos As %String;
 
-Property NuevoEmail As %String;
+Property nuevoEmail As %String;
 
 Property emailAcutal As %String;
 
@@ -24,16 +24,16 @@ Storage Default
 <Value>apellidos</Value>
 </Value>
 <Value name="3">
-<Value>NuevoEmail</Value>
-</Value>
-<Value name="4">
 <Value>emailAcutal</Value>
 </Value>
-<Value name="5">
+<Value name="4">
 <Value>permiteNotificaciones</Value>
 </Value>
-<Value name="6">
+<Value name="5">
 <Value>conservarCorreo</Value>
+</Value>
+<Value name="6">
+<Value>nuevoEmail</Value>
 </Value>
 </Data>
 <DefaultData>ModificarPacienteRquestDefaultData</DefaultData>

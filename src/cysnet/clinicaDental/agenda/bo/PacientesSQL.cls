@@ -77,6 +77,8 @@ Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.bajaPacienteRequest, Ou
     quit $$$OK
 }
 
+// Metodo para modiicar un paciente, validando si conserva el correo o no, en caso de que no valida que el nuevo correo ya no se encuentre registrado
+
 Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.ModificarPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
@@ -96,7 +98,7 @@ Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteR
             }
         } else {
             set stm = ##class(%SQL.Statement).%New()
-            set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.NuevoEmail_"'")
+            set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.nuevoEmail_"'")
             if ($$$ISOK(sc)) {
                 set rs = stm.%Execute()
                 if (rs.%Next(.sc)) {
@@ -105,7 +107,7 @@ Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteR
                     return $$$OK
                 } 
             }
-            &sql(UPDATE cysnet_clinicaDental_data.Pacientes SET nombre = :pRequest.nombre, apellidos = :pRequest.apellidos, email = :pRequest.NuevoEmail, permiteNotificaciones = :pRequest.permiteNotificaciones WHERE email = :pRequest.emailAcutal)
+            &sql(UPDATE cysnet_clinicaDental_data.Pacientes SET nombre = :pRequest.nombre, apellidos = :pRequest.apellidos, email = :pRequest.nuevoEmail, permiteNotificaciones = :pRequest.permiteNotificaciones WHERE email = :pRequest.emailAcutal)
             if (SQLCODE = 0) {
                 // La instrucción ha ido bien
             } else {
@@ -123,7 +125,7 @@ Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteR
     }
     if ($$$ISERR(sc)) {
         set pResponse.exito = 0
-        set pResponse.mensaje = "paila"
+        set pResponse.mensaje = "Error, mirar trace"
     }
     quit sc
 }

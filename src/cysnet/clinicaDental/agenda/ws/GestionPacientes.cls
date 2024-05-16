@@ -46,4 +46,24 @@ Method bajaPaciente(email As %String) As cysnet.clinicaDental.msg.bajaPacienteRe
 	quit rsp
 }
 
+/// Modifica un paciente. Al modificar, se comprobará que el email no exista en OTRO paciente. 
+/// Permitir modificar los campos: nombre, apellidos, email, permiteNotificaciones
+Method modificarPaciente(nombre As %String, apellidos As %String, nuevoEmail As %String, emailAcutal As %String, permiteNotificaciones As %Boolean, conservarCorreo As %Boolean) As cysnet.clinicaDental.msg.ModificarPacienteResponse [ WebMethod ]
+{
+    #dim req As cysnet.clinicaDental.msg.ModificarPacienteRequest
+	#dim rsp As cysnet.clinicaDental.msg.ModificarPacienteResponse
+
+    set req = ##class(cysnet.clinicaDental.msg.ModificarPacienteRequest).%New()
+    set req.nombre = nombre
+    set req.apellidos = apellidos
+    set req.nuevoEmail = nuevoEmail
+    set req.emailAcutal = emailAcutal
+    set req.permiteNotificaciones = permiteNotificaciones
+    set req.conservarCorreo = conservarCorreo
+
+    do ..SendRequestSync("ProcesoPacientes", req, .rsp)
+
+	quit rsp
+}
+
 }
