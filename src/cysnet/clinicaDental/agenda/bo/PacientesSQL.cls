@@ -12,6 +12,7 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, 
     Try{
         set stm = ##class(%SQL.Statement).%New()
         set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.email_"'")
+        /// &sql(SELECT * INTO :pResponse() FROM  cysnet_clinicaDental_data.Pacient WHERE email = :pRequest.email)
         if ($$$ISOK(sc)) {
             set rs = stm.%Execute()
             if (rs.%Next(.sc)) {
