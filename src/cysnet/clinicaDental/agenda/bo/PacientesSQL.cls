@@ -77,8 +77,7 @@ Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.bajaPacienteRequest, Ou
     quit $$$OK
 }
 
-// Metodo para modiicar un paciente, validando si conserva el correo o no, en caso de que no valida que el nuevo correo ya no se encuentre registrado
-
+/// Metodo para modiicar un paciente, validando si conserva el correo o no, en caso de que no valida que el nuevo correo ya no se encuentre registrado
 Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.ModificarPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
@@ -130,6 +129,33 @@ Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteR
     quit sc
 }
 
+Method listarPacientes(pRequest As cysnet.clinicaDental.msg.ListarPacientesRequest, Output pResponse As cysnet.clinicaDental.msg.ListarPacientesResponse) As %Status
+{
+    #dim sc As %Status = $$$OK
+    #dim stm As %SQL.Statement
+    #dim rs As %SQL.StatementResult
+    set stm = ##class(%SQL.Statement).%New()
+    set pResponse.pacientes = ##class(%ListOfObjects).%New()
+    if (pRequest.mostrarBajas){
+        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes")
+    } else {
+        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE baja = 0")
+    }
+    if ($$$ISOK(sc)) {
+        set rs = stm.%Execute()
+        while (rs.%Next()) {
+            set paciente = ##class(cysnet.clinicaDental.msg.struct.Pacientes).%New()
+            set paciente.nombre = rs.nombre
+            set paciente.apellidos = rs.apellidos
+            set paciente.email = rs.email
+            set paciente.permiteNotificaciones = rs.permiteNotificaciones
+            do pResponse.pacientes.Insert(paciente)
+            kill paciente
+        }
+    } 
+    quit $$$OK
+}
+
 XData MessageMap
 {
 <MapItems>
@@ -141,6 +167,9 @@ XData MessageMap
     </MapItem>
     <MapItem MessageType="cysnet.clinicaDental.msg.ModificarPacienteRequest">
     <Method>modificarPaciente</Method>
+    </MapItem>
+    <MapItem MessageType="cysnet.clinicaDental.msg.ListarPacientesRequest">
+    <Method>listarPacientes</Method>
     </MapItem>
 </MapItems>
 }
