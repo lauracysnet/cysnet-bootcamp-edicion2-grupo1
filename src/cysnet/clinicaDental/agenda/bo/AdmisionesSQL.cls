@@ -19,7 +19,7 @@ Method admitirPaciente(pRequest As cysnet.clinicaDental.msg.admitirPacienteReque
             quit:$$$ISERR(sc)
             &sql(INSERT INTO cysnet_clinicaDental_data.Admisiones (idCita, fechaAdmision,indEnviada) VALUES (:pRequest.idCita, :pRequest.fechaAdmision, :pRequest.indEnviada))
          } Else {
-                    Set pResponse.mensaje = "ya exite un registro para ese paciente y cita"
+                    Set pResponse.mensaje = "ya existe un registro para ese paciente y cita"
                 }
         }
          
