@@ -22,7 +22,7 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, 
         }
         &sql(INSERT INTO cysnet_clinicaDental_data.Pacientes (nombre, apellidos, email, permiteNotificaciones, baja) VALUES (:pRequest.nombre, :pRequest.apellidos, :pRequest.email ,:pRequest.permiteNotificaciones, :pRequest.baja))
         if (SQLCODE = 0) {
-        // La instrucción ha ido bien
+        set pResponse.mensajeError = "Bienvenid@ "_pRequest.nombre_" "_pRequest.apellidos
         } else {
         set pResponse.exito = 0
         set pResponse.error = $System.SQL.Functions.SQLCODE(SQLCODE)
@@ -157,6 +157,23 @@ Method listarPacientes(pRequest As cysnet.clinicaDental.msg.ListarPacientesReque
     quit $$$OK
 }
 
+Method buscarPacientePorID(pRequest As cysnet.clinicaDental.msg.BuscarPacientePorIDRequest, Output pResponse As cysnet.clinicaDental.msg.BuscarPacientePorIDResponse) As %Status
+{
+    #dim sc As %Status = $$$OK
+    #dim stm As %SQL.Statement
+    #dim rs As %SQL.StatementResult
+    set stm = ##class(%SQL.Statement).%New()
+    set pResponse = ##class(cysnet.clinicaDental.msg.BuscarPacientePorIDResponse).%New()
+    set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE ID = "_pRequest.id)
+    set rs = stm.%Execute()
+    if (rs.%Next(.sc)) {
+        set pResponse.nombre = rs.nombre
+        set pResponse.apellidos = rs.apellidos
+        set pResponse.email = rs.email
+    } 
+    quit $$$OK
+}
+
 XData MessageMap
 {
 <MapItems>
@@ -171,6 +188,9 @@ XData MessageMap
     </MapItem>
     <MapItem MessageType="cysnet.clinicaDental.msg.ListarPacientesRequest">
     <Method>listarPacientes</Method>
+    </MapItem>
+    <MapItem MessageType="cysnet.clinicaDental.msg.BuscarPacientePorIDRequest">
+    <Method>buscarPacientePorID</Method>
     </MapItem>
 </MapItems>
 }

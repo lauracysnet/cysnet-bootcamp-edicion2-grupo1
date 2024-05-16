@@ -66,4 +66,36 @@ Method modificarPaciente(nombre As %String, apellidos As %String, nuevoEmail As 
 	quit rsp
 }
 
+/// Devuelve toda lista de pacientes que no estén dados de baja. 
+/// Tendrá como parámetros de entrada los siguientes filtros:
+/// mostrarBajas, de tipo boolean, por defecto, 0 (falce). 
+/// Si se pasa este parámetro a 1 (true), devolverá la lista de pacientes completa, 
+/// incluidos los que están de baja.  
+Method listarPacientes(mostrarBajas As %Boolean) As cysnet.clinicaDental.msg.ListarPacientesResponse [ WebMethod ]
+{
+    #dim req As cysnet.clinicaDental.msg.ListarPacientesRequest
+	#dim rsp As cysnet.clinicaDental.msg.ListarPacientesResponse
+
+    set req = ##class(cysnet.clinicaDental.msg.ListarPacientesRequest).%New()
+    set req.mostrarBajas = mostrarBajas
+
+    do ..SendRequestSync("ProcesoPacientes", req, .rsp)
+
+	quit rsp
+}
+
+/// Devuelve un paciente cuyo identificador sea el que se pasa como parámetro de entrada.
+Method buscarPacientePorID(id As %BigInt) As cysnet.clinicaDental.msg.ListarPacientesResponse [ WebMethod ]
+{
+    #dim req As cysnet.clinicaDental.msg.BuscarPacientePorIDRequest
+	#dim rsp As cysnet.clinicaDental.msg.BuscarPacientePorIDResponse
+
+    set req = ##class(cysnet.clinicaDental.msg.BuscarPacientePorIDRequest).%New()
+    set req.id = id
+
+    do ..SendRequestSync("ProcesoPacientes", req, .rsp)
+
+	quit rsp
+}
+
 }
