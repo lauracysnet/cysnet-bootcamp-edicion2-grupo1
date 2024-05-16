@@ -7,7 +7,7 @@ Parameter SERVICENAME = "GestionCitas";
 /// Namespace SOAP para servicio web
 Parameter NAMESPACE = "BOOTCAMP";
 
-/// Se utilizarÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡n namespaces de clases referenciadas en WSDL.
+/// Se utilizara namespaces de clases referenciadas en WSDL.
 Parameter USECLASSNAMESPACES = 1;
 
 Method altaCita(idPaciente As %BigInt, descCita As %String, fechaCita As %TimeStamp) As cysnet.clinicaDental.msg.CrearAltaCitaResponse [ WebMethod ]
