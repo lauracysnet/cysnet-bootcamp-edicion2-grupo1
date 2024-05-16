@@ -135,6 +135,7 @@ Method listarPacientes(pRequest As cysnet.clinicaDental.msg.ListarPacientesReque
     #dim stm As %SQL.Statement
     #dim rs As %SQL.StatementResult
     set stm = ##class(%SQL.Statement).%New()
+    set pResponse = ##class(cysnet.clinicaDental.msg.ListarPacientesResponse).%New()
     set pResponse.pacientes = ##class(%ListOfObjects).%New()
     if (pRequest.mostrarBajas){
         set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes")
