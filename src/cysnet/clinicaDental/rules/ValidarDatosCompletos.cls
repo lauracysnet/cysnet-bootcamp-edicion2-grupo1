@@ -23,6 +23,22 @@ XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 </when>
 </rule>
 </when>
+<when condition="nombreClase=&quot;ModificarPacienteRequest&quot;" comment="">
+<rule name="" disabled="false">
+<when condition="(objRequest.nombre!=&quot;&quot;)&amp;&amp;(objRequest.apellidos!=&quot;&quot;)&amp;&amp;(objRequest.emailAcutal!=&quot;&quot;)&amp;&amp;(objRequest.permiteNotificaciones!=&quot;&quot;)&amp;&amp;objRequest.conservarCorreo!=&quot;&quot;" comment="">
+<rule name="Valida si actualiza email" disabled="false">
+<when condition="!objRequest.conservarCorreo" comment="">
+<rule name="" disabled="false">
+<when condition="objRequest.nuevoEmail!=&quot;&quot;" comment="">
+<return>1</return>
+</when>
+</rule>
+</when>
+</rule>
+<return>1</return>
+</when>
+</rule>
+</when>
 </rule>
 </ruleSet>
 </ruleDefinition>

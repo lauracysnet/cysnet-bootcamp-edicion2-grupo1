@@ -1,10 +1,8 @@
 Class cysnet.clinicaDental.msg.ModificarPacienteResponse Extends Ens.Response
 {
 
-/// Description
 Property exito As %Boolean;
 
-/// Description
 Property mensaje As %String;
 
 Storage Default
