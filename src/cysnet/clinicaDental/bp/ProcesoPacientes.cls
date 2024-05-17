@@ -2,6 +2,11 @@
 Class cysnet.clinicaDental.bp.ProcesoPacientes Extends Ens.BusinessProcessBPL
 {
 
+Storage Default
+{
+<Type>%Storage.Persistent</Type>
+}
+
 /// BPL Definition
 XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 {
@@ -23,10 +28,10 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <if name='Datos Correctos?' condition='context.resultadoRegla = 1' xpos='200' ypos='550' xend='200' yend='1050' >
 <true>
 <switch name='Tipo De Transacción' xpos='335' ypos='700' xend='335' yend='950' >
-<case condition='request.%ClassName() = "NuevoPacienteRequest"' name='CrearPaciente' >
-<call name='Crear Paciente' target='PacientesSQL' async='1' xpos='470' ypos='850' >
+<case condition='request.%ClassName() = "nuevoPacienteRequest"' >
+<call name='Nuevo Paciente' target='PacientesSQL' async='0' xpos='470' ypos='850' >
 <request type='cysnet.clinicaDental.msg.nuevoPacienteRequest' >
-<assign property="callrequest" value="context.objRequest" action="set" />
+<assign property="callrequest" value="request" action="set" />
 </request>
 <response type='cysnet.clinicaDental.msg.nuevoPacienteResponse' >
 <assign property="response" value="callresponse" action="set" />
@@ -39,11 +44,6 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </if>
 </sequence>
 </process>
-}
-
-Storage Default
-{
-<Type>%Storage.Persistent</Type>
 }
 
 }
