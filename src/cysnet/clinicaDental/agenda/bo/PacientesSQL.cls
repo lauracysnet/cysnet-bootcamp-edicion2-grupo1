@@ -17,16 +17,17 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.NuevoPacienteRequest, 
             set rs = stm.%Execute()
             if (rs.%Next(.sc)) {
                 set pResponse.exito = 0
-                set pResponse.mensajeError = "Ya existe paciente con el correo ingresado"
+                set pResponse.mensaje = "Ya existe paciente con el correo ingresado"
                 return $$$OK
             }
         }
         &sql(INSERT INTO cysnet_clinicaDental_data.Pacientes (nombre, apellidos, email, permiteNotificaciones, baja) VALUES (:pRequest.nombre, :pRequest.apellidos, :pRequest.email ,:pRequest.permiteNotificaciones, :pRequest.baja))
         if (SQLCODE = 0) {
-        set pResponse.mensajeError = "Bienvenid@ "_pRequest.nombre_" "_pRequest.apellidos
+        set pResponse.mensaje = "Bienvenid@ "_pRequest.nombre_" "_pRequest.apellidos
+        set pResponse.id = %ROWID 
         } else {
         set pResponse.exito = 0
-        set pResponse.error = $System.SQL.Functions.SQLCODE(SQLCODE)
+        set pResponse.mensaje = $System.SQL.Functions.SQLCODE(SQLCODE)
         }
     } Catch (err) {
        // Si ha ocurrido un error, crear el objeto Status:
@@ -38,7 +39,7 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.NuevoPacienteRequest, 
     }
     if ($$$ISERR(sc)) {
         set pResponse.exito = 0
-        set pResponse.error = $System.Status.GetErrorText(sc)
+        set pResponse.mensaje = $System.Status.GetErrorText(sc)
     }
     quit $$$OK
 }
@@ -51,7 +52,6 @@ Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.BajaPacienteRequest, Ou
     #dim rs As %SQL.StatementResult
     set pResponse = ##class(cysnet.clinicaDental.msg.BajaPacienteResponse).%New()
     set pResponse.exito = 1
-    set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
     Try {
         set stm = ##class(%SQL.Statement).%New()
         set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.email_"'")
@@ -62,7 +62,7 @@ Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.BajaPacienteRequest, Ou
                 set sc = stm.%Prepare("UPDATE cysnet_clinicaDental_data.Pacientes SET baja = 1 WHERE email = "_"'"_pRequest.email_"'")
                 if ($$$ISOK(sc)) {
                     set rs = stm.%Execute()
-                    if (rs.%Next(.sc)) {
+                    if (rs.%SQLCODE = 0) {
                         set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
                     }
                 } 
@@ -193,7 +193,7 @@ Method buscarPacientePorID(pRequest As cysnet.clinicaDental.msg.BuscarPacientePo
 XData MessageMap
 {
 <MapItems>
-    <MapItem MessageType="cysnet.clinicaDental.msg.nuevoPacienteRequest">
+    <MapItem MessageType="cysnet.clinicaDental.msg.NuevoPacienteRequest">
     <Method>crearPaciente</Method>
     </MapItem>
     <MapItem MessageType="cysnet.clinicaDental.msg.BajaPacienteRequest">
