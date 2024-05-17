@@ -7,7 +7,7 @@ Property asunto As %String(MAXLEN = 100);
 
 Property mensaje As %String(MAXLEN = 300);
 
-Property indEnviado As %Integer;
+Property indEnviado As %Boolean;
 
 Storage Default
 {

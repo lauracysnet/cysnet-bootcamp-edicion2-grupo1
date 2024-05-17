@@ -5,7 +5,10 @@ Class cysnet.clinicaDental.msg.NuevoPacienteResponse Extends Ens.Response
 Property exito As %Boolean;
 
 /// Contiene el mensaje de error en caso de que se genere alguno
-Property mensajeError As %String;
+Property mensaje As %String;
+
+/// Ultimo ID agregado en la db
+Property id As %BigInt;
 
 Storage Default
 {
@@ -15,7 +18,10 @@ Storage Default
 <Value>exito</Value>
 </Value>
 <Value name="2">
-<Value>mensajeError</Value>
+<Value>id</Value>
+</Value>
+<Value name="3">
+<Value>mensaje</Value>
 </Value>
 </Data>
 <DefaultData>NuevoPacienteResponseDefaultData</DefaultData>
