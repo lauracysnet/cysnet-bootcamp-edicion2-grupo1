@@ -18,8 +18,8 @@ Method altaPaciente(pRequest As cysnet.clinicaDental.msg.altaPacienteRequest, Ou
          if (rs.%Next(.sc)){
             quit:$$$ISERR(sc)
             &sql(INSERT INTO cysnet_clinicaDental_data.Altas (idCita, fechaAltas, indEnviada) VALUES (:pRequest.idCita, :pRequest.fechaAltas, :pRequest.indEnviada))
-         } Else {
-                    Set pResponse.mensaje = "No existen admisiones para ese identificador ("_pRequest.idPersona_")"
+          } Else {
+                    Set pResponse.mensaje = "No se ha admitido el paciente en la cita"
                 }
         }
          
@@ -38,10 +38,6 @@ Method altaPaciente(pRequest As cysnet.clinicaDental.msg.altaPacienteRequest, Ou
             } else {
                 set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
             }
-    }
-    if ($$$ISERR(sc)) {
-        set pResponse.exito = 0
-        set pResponse.mensaje = $System.Status.GetErrorText(sc)
     }
 
     quit $$$OK
