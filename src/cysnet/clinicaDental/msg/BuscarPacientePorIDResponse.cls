@@ -7,6 +7,8 @@ Property apellidos As %String;
 
 Property email As %String;
 
+Property mensaje As %String;
+
 Storage Default
 {
 <Data name="BuscarPacientePorIDResponseDefaultData">
@@ -19,6 +21,9 @@ Storage Default
 </Value>
 <Value name="3">
 <Value>email</Value>
+</Value>
+<Value name="4">
+<Value>mensaje</Value>
 </Value>
 </Data>
 <DefaultData>BuscarPacientePorIDResponseDefaultData</DefaultData>

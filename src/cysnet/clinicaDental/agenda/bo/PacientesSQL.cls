@@ -182,7 +182,10 @@ Method buscarPacientePorID(pRequest As cysnet.clinicaDental.msg.BuscarPacientePo
         set pResponse.nombre = rs.nombre
         set pResponse.apellidos = rs.apellidos
         set pResponse.email = rs.email
-    } 
+        set pResponse.mensaje = "Exitoso"
+    } else {
+        set pResponse.mensaje = "No se encontró ningun paciente con el ID digitado"
+    }
     quit $$$OK
 }
 

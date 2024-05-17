@@ -10,7 +10,7 @@ Storage Default
 /// BPL Definition
 XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 {
-<process language='objectscript' request='Ens.Request' response='Ens.Response' height='2000' width='2000' >
+<process language='objectscript' request='Ens.Request' response='Ens.Response' height='2000' width='2150' >
 <context>
 <property name='objRequest' type='Ens.Request' instantiate='0' />
 <property name='resultadoRegla' type='%Boolean' initialexpression='0' instantiate='0' />
@@ -64,6 +64,16 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="callrequest" value="request" action="set" />
 </request>
 <response type='cysnet.clinicaDental.msg.ListarPacientesResponse' >
+<assign property="response" value="callresponse" action="set" />
+</response>
+</call>
+</case>
+<case condition='request.%ClassName() = "BuscarPacientePorIDRequest"' name='Buscar Paciente Por ID' >
+<call name='Buscar Paciente Por ID' target='PacientesSQL' async='0' xpos='1550' ypos='850' >
+<request type='cysnet.clinicaDental.msg.BuscarPacientePorIDRequest' >
+<assign property="callrequest" value="request" action="set" />
+</request>
+<response type='cysnet.clinicaDental.msg.BuscarPacientePorIDResponse' >
 <assign property="response" value="callresponse" action="set" />
 </response>
 </call>
