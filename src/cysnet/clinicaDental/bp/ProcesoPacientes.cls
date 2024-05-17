@@ -58,6 +58,16 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </response>
 </call>
 </case>
+<case condition='request.%ClassName() = "ListarPacientesRequest"' name='Listar Pacientes' >
+<call name='Listar Pacientes ' target='PacientesSQL' async='0' xpos='1280' ypos='850' >
+<request type='cysnet.clinicaDental.msg.ListarPacientesRequest' >
+<assign property="callrequest" value="request" action="set" />
+</request>
+<response type='cysnet.clinicaDental.msg.ListarPacientesResponse' >
+<assign property="response" value="callresponse" action="set" />
+</response>
+</call>
+</case>
 <default name='default' />
 </switch>
 </true>
