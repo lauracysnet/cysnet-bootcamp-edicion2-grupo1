@@ -1,6 +1,8 @@
 Class cysnet.clinicaDental.msg.BuscarPacientePorIDResponse Extends Ens.Response
 {
 
+Property id As %BigInt;
+
 Property nombre As %String;
 
 Property apellidos As %String;
@@ -24,6 +26,9 @@ Storage Default
 </Value>
 <Value name="4">
 <Value>mensaje</Value>
+</Value>
+<Value name="5">
+<Value>id</Value>
 </Value>
 </Data>
 <DefaultData>BuscarPacientePorIDResponseDefaultData</DefaultData>

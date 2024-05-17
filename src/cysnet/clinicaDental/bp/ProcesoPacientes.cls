@@ -10,7 +10,7 @@ Storage Default
 /// BPL Definition
 XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 {
-<process language='objectscript' request='Ens.Request' response='Ens.Response' height='2000' width='2150' >
+<process language='objectscript' request='Ens.Request' response='Ens.Response' height='2000' width='2285' >
 <context>
 <property name='objRequest' type='Ens.Request' instantiate='0' />
 <property name='resultadoRegla' type='%Boolean' initialexpression='0' instantiate='0' />
@@ -20,26 +20,16 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </parameters>
 </property>
 </context>
-<sequence xend='200' yend='1150' >
+<sequence xend='200' yend='1400' >
 <assign name="Asignar Request" property="context.objRequest" value="request" action="set" xpos='200' ypos='250' />
 <assign name="Asignar nombreClase" property="context.nombreClase" value="request.%ClassName()" action="set" xpos='200' ypos='350' />
 <rule name='ValidaDatos' rule='cysnet.clinicaDental.rules.ValidarDatosCompletos'  resultLocation='context.resultadoRegla' ruleContext='context' xpos='200' ypos='450' >
 </rule>
-<if name='Datos Correctos?' condition='context.resultadoRegla = 1' xpos='200' ypos='550' xend='200' yend='1050' >
+<if name='Datos Correctos?' condition='context.resultadoRegla = 1' xpos='200' ypos='550' xend='200' yend='1300' >
 <true>
-<switch name='Tipo De Transacción' xpos='335' ypos='700' xend='335' yend='950' >
-<case condition='request.%ClassName() = "NuevoPacienteRequest"' name='Nuevo Paciente ' >
-<call name='Nuevo Paciente' target='PacientesSQL' async='0' xpos='470' ypos='850' >
-<request type='cysnet.clinicaDental.msg.NuevoPacienteRequest' >
-<assign property="callrequest" value="request" action="set" />
-</request>
-<response type='cysnet.clinicaDental.msg.NuevoPacienteResponse' >
-<assign property="response" value="callresponse" action="set" />
-</response>
-</call>
-</case>
+<switch name='Tipo De Transacción' xpos='335' ypos='700' xend='335' yend='1200' >
 <case condition='request.%ClassName() = "BajaPacienteRequest"' name='Baja Paciente ' >
-<call name='Baja Paciente' target='PacientesSQL' async='0' xpos='740' ypos='850' >
+<call name='Baja Paciente' target='PacientesSQL' async='0' xpos='470' ypos='850' >
 <request type='cysnet.clinicaDental.msg.BajaPacienteRequest' >
 <assign property="callrequest" value="request" action="set" />
 </request>
@@ -49,7 +39,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 </case>
 <case condition='request.%ClassName() = "ModificarPacienteRequest"' name='Modificar Paciente ' >
-<call name='Modificar Paciente' target='PacientesSQL' async='0' xpos='1010' ypos='850' >
+<call name='Modificar Paciente' target='PacientesSQL' async='0' xpos='740' ypos='850' >
 <request type='cysnet.clinicaDental.msg.ModificarPacienteRequest' >
 <assign property="callrequest" value="request" action="set" />
 </request>
@@ -59,7 +49,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 </case>
 <case condition='request.%ClassName() = "ListarPacientesRequest"' name='Listar Pacientes' >
-<call name='Listar Pacientes ' target='PacientesSQL' async='0' xpos='1280' ypos='850' >
+<call name='Listar Pacientes ' target='PacientesSQL' async='0' xpos='1010' ypos='850' >
 <request type='cysnet.clinicaDental.msg.ListarPacientesRequest' >
 <assign property="callrequest" value="request" action="set" />
 </request>
@@ -69,7 +59,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 </case>
 <case condition='request.%ClassName() = "BuscarPacientePorIDRequest"' name='Buscar Paciente Por ID' >
-<call name='Buscar Paciente Por ID' target='PacientesSQL' async='0' xpos='1550' ypos='850' >
+<call name='Buscar Paciente Por ID' target='PacientesSQL' async='0' xpos='1280' ypos='850' >
 <request type='cysnet.clinicaDental.msg.BuscarPacientePorIDRequest' >
 <assign property="callrequest" value="request" action="set" />
 </request>
@@ -77,6 +67,19 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="response" value="callresponse" action="set" />
 </response>
 </call>
+</case>
+<case condition='request.%ClassName() = "NuevoPacienteRequest"' name='Nuevo Paciente ' >
+<call name='Nuevo Paciente' target='PacientesSQL' async='0' xpos='1550' ypos='850' >
+<request type='cysnet.clinicaDental.msg.NuevoPacienteRequest' >
+<assign property="callrequest" value="request" action="set" />
+</request>
+<response type='cysnet.clinicaDental.msg.NuevoPacienteResponse' >
+<assign property="response" value="callresponse" action="set" />
+</response>
+</call>
+<if name='inserción correcta?' condition='response.exito' xpos='1550' ypos='950' xend='1550' yend='1100' >
+<true/>
+</if>
 </case>
 <default name='default' />
 </switch>

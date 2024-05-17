@@ -179,6 +179,7 @@ Method buscarPacientePorID(pRequest As cysnet.clinicaDental.msg.BuscarPacientePo
     set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE ID = "_pRequest.id)
     set rs = stm.%Execute()
     if (rs.%Next(.sc)) {
+        set pResponse.id = rs.ID
         set pResponse.nombre = rs.nombre
         set pResponse.apellidos = rs.apellidos
         set pResponse.email = rs.email
