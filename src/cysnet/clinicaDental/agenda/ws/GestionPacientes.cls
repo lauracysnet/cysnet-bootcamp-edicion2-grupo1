@@ -15,12 +15,12 @@ Crea un nuevo registro de paciente. Antes de darle de alta, comprobará que no e
 con el mismo email. El campo permiteNotificaciones tendrá valor por defecto 
 1 (true) y el campo baja 0 (false)
 */
-Method nuevoPaciente(nombre As %String, apellidos As %String, email As %String, permiteNotificaciones As %Boolean, baja As %Boolean) As cysnet.clinicaDental.msg.nuevoPacienteResponse [ WebMethod ]
+Method nuevoPaciente(nombre As %String, apellidos As %String, email As %String, permiteNotificaciones As %Boolean, baja As %Boolean) As cysnet.clinicaDental.msg.NuevoPacienteResponse [ WebMethod ]
 {
-    #dim req As cysnet.clinicaDental.msg.nuevoPacienteRequest
-	#dim rsp As cysnet.clinicaDental.msg.nuevoPacienteResponse
+    #dim req As cysnet.clinicaDental.msg.NuevoPacienteRequest
+	#dim rsp As cysnet.clinicaDental.msg.NuevoPacienteResponse
 
-    set req = ##class(cysnet.clinicaDental.msg.nuevoPacienteRequest).%New()
+    set req = ##class(cysnet.clinicaDental.msg.NuevoPacienteRequest).%New()
     set req.nombre = nombre
     set req.apellidos = apellidos
     set req.email = email

@@ -1,4 +1,4 @@
-Class cysnet.clinicaDental.msg.nuevoPacienteResponse Extends Ens.Response
+Class cysnet.clinicaDental.msg.NuevoPacienteResponse Extends Ens.Response
 {
 
 /// Informa si la petición se realizó o no
@@ -9,8 +9,8 @@ Property mensajeError As %String;
 
 Storage Default
 {
-<Data name="nuevoPacienteResponseDefaultData">
-<Subscript>"nuevoPacienteResponse"</Subscript>
+<Data name="NuevoPacienteResponseDefaultData">
+<Subscript>"NuevoPacienteResponse"</Subscript>
 <Value name="1">
 <Value>exito</Value>
 </Value>
@@ -18,7 +18,7 @@ Storage Default
 <Value>mensajeError</Value>
 </Value>
 </Data>
-<DefaultData>nuevoPacienteResponseDefaultData</DefaultData>
+<DefaultData>NuevoPacienteResponseDefaultData</DefaultData>
 <Type>%Storage.Persistent</Type>
 }
 

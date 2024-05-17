@@ -2,12 +2,12 @@ Class cysnet.clinicaDental.agenda.bo.PacientesSQL Extends Ens.BusinessOperation
 {
 
 /// Método que crea un nueva paciente
-Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.nuevoPacienteResponse) As %Status
+Method crearPaciente(pRequest As cysnet.clinicaDental.msg.NuevoPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.NuevoPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
     #dim stm As %SQL.Statement
     #dim rs As %SQL.StatementResult
-    set pResponse = ##class(cysnet.clinicaDental.msg.nuevoPacienteResponse).%New()
+    set pResponse = ##class(cysnet.clinicaDental.msg.NuevoPacienteResponse).%New()
     set pResponse.exito = 1
     Try{
         set stm = ##class(%SQL.Statement).%New()

@@ -1,4 +1,4 @@
-Class cysnet.clinicaDental.msg.nuevoPacienteRequest Extends Ens.Request
+Class cysnet.clinicaDental.msg.NuevoPacienteRequest Extends Ens.Request
 {
 
 Property nombre As %String;
@@ -13,7 +13,7 @@ Property baja As %Boolean;
 
 Storage Default
 {
-<Data name="nuevoPacienteRequestDefaultData">
+<Data name="NuevoPacienteRequestDefaultData">
 <Subscript>"nuevoPacienteRequest"</Subscript>
 <Value name="1">
 <Value>nombre</Value>
@@ -31,7 +31,7 @@ Storage Default
 <Value>baja</Value>
 </Value>
 </Data>
-<DefaultData>nuevoPacienteRequestDefaultData</DefaultData>
+<DefaultData>NuevoPacienteRequestDefaultData</DefaultData>
 <Type>%Storage.Persistent</Type>
 }
 
