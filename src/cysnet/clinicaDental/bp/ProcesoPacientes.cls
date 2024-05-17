@@ -28,12 +28,22 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <if name='Datos Correctos?' condition='context.resultadoRegla = 1' xpos='200' ypos='550' xend='200' yend='1050' >
 <true>
 <switch name='Tipo De Transacción' xpos='335' ypos='700' xend='335' yend='950' >
-<case condition='request.%ClassName() = "nuevoPacienteRequest"' >
+<case condition='request.%ClassName() = "nuevoPacienteRequest"' name='Nuevo Paciente ' >
 <call name='Nuevo Paciente' target='PacientesSQL' async='0' xpos='470' ypos='850' >
 <request type='cysnet.clinicaDental.msg.nuevoPacienteRequest' >
 <assign property="callrequest" value="request" action="set" />
 </request>
 <response type='cysnet.clinicaDental.msg.nuevoPacienteResponse' >
+<assign property="response" value="callresponse" action="set" />
+</response>
+</call>
+</case>
+<case condition='request.%ClassName() = "BajaPacienteRequest"' name='Baja Paciente ' >
+<call name='Baja Paciente' target='PacientesSQL' async='0' xpos='740' ypos='850' >
+<request type='cysnet.clinicaDental.msg.BajaPacienteRequest' >
+<assign property="callrequest" value="request" action="set" />
+</request>
+<response type='cysnet.clinicaDental.msg.BajaPacienteResponse' >
 <assign property="response" value="callresponse" action="set" />
 </response>
 </call>

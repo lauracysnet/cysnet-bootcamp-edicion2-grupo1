@@ -1,4 +1,4 @@
-Class cysnet.clinicaDental.msg.bajaPacienteResponse Extends Ens.Response
+Class cysnet.clinicaDental.msg.BajaPacienteResponse Extends Ens.Response
 {
 
 /// Se logró la ejecucion o no
@@ -9,8 +9,8 @@ Property mensaje As %String(MAXLEN = 250);
 
 Storage Default
 {
-<Data name="bajaPacienteResponseDefaultData">
-<Subscript>"bajaPacienteResponse"</Subscript>
+<Data name="BajaPacienteResponseDefaultData">
+<Subscript>"BajaPacienteResponse"</Subscript>
 <Value name="1">
 <Value>exito</Value>
 </Value>
@@ -18,7 +18,7 @@ Storage Default
 <Value>mensaje</Value>
 </Value>
 </Data>
-<DefaultData>bajaPacienteResponseDefaultData</DefaultData>
+<DefaultData>BajaPacienteResponseDefaultData</DefaultData>
 <Type>%Storage.Persistent</Type>
 }
 

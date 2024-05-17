@@ -16,6 +16,13 @@ XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 </when>
 </rule>
 </when>
+<when condition="nombreClase=&quot;BajaPacienteRequest&quot;" comment="">
+<rule name="" disabled="false">
+<when condition="objRequest.email!=&quot;&quot;" comment="">
+<return>1</return>
+</when>
+</rule>
+</when>
 </rule>
 </ruleSet>
 </ruleDefinition>

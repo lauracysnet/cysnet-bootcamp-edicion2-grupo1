@@ -44,23 +44,34 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.nuevoPacienteRequest, 
 }
 
 /// Método que crea una nueva paciente
-Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.bajaPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.bajaPacienteResponse) As %Status
+Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.BajaPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.BajaPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
     #dim stm As %SQL.Statement
     #dim rs As %SQL.StatementResult
-    set pResponse = ##class(cysnet.clinicaDental.msg.bajaPacienteResponse).%New()
+    set pResponse = ##class(cysnet.clinicaDental.msg.BajaPacienteResponse).%New()
     set pResponse.exito = 1
     set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
     Try {
         set stm = ##class(%SQL.Statement).%New()
-        set sc = stm.%Prepare("UPDATE cysnet_clinicaDental_data.Pacientes SET baja = 1 WHERE email = "_"'"_pRequest.email_"'")
+        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.email_"'")
+        /// &sql(SELECT * INTO :pResponse() FROM  cysnet_clinicaDental_data.Pacient WHERE email = :pRequest.email)
         if ($$$ISOK(sc)) {
             set rs = stm.%Execute()
             if (rs.%Next(.sc)) {
-                set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
+                set sc = stm.%Prepare("UPDATE cysnet_clinicaDental_data.Pacientes SET baja = 1 WHERE email = "_"'"_pRequest.email_"'")
+                if ($$$ISOK(sc)) {
+                    set rs = stm.%Execute()
+                    if (rs.%Next(.sc)) {
+                        set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
+                    }
+                } 
+            } else {
+                set pResponse.exito = 0
+                set pResponse.mensaje = "No existe ningun paciente con el Email digitado"
             }
-        } 
+        }
+
     }
     Catch ex {
              // Si ha ocurrido un error, crear el objeto Status:
@@ -181,7 +192,7 @@ XData MessageMap
     <MapItem MessageType="cysnet.clinicaDental.msg.nuevoPacienteRequest">
     <Method>crearPaciente</Method>
     </MapItem>
-    <MapItem MessageType="cysnet.clinicaDental.msg.bajaPacienteRequest">
+    <MapItem MessageType="cysnet.clinicaDental.msg.BajaPacienteRequest">
     <Method>bajaPaciente</Method>
     </MapItem>
     <MapItem MessageType="cysnet.clinicaDental.msg.ModificarPacienteRequest">

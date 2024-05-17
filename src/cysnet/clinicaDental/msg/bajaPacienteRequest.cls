@@ -1,4 +1,4 @@
-Class cysnet.clinicaDental.msg.bajaPacienteRequest Extends Ens.Request
+Class cysnet.clinicaDental.msg.BajaPacienteRequest Extends Ens.Request
 {
 
 /// Email para identificar a que paciente darle de baja
@@ -6,13 +6,13 @@ Property email As %String;
 
 Storage Default
 {
-<Data name="bajaPacienteRequestDefaultData">
-<Subscript>"bajaPacienteRequest"</Subscript>
+<Data name="BajaPacienteRequestDefaultData">
+<Subscript>"BajaPacienteRequest"</Subscript>
 <Value name="1">
 <Value>email</Value>
 </Value>
 </Data>
-<DefaultData>bajaPacienteRequestDefaultData</DefaultData>
+<DefaultData>BajaPacienteRequestDefaultData</DefaultData>
 <Type>%Storage.Persistent</Type>
 }
 
