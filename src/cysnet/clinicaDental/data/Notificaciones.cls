@@ -34,8 +34,41 @@ Storage Default
 </Data>
 <DataLocation>^cysnet.clinBD9C.NotificacionesD</DataLocation>
 <DefaultData>NotificacionesDefaultData</DefaultData>
+<ExtentSize>1</ExtentSize>
 <IdLocation>^cysnet.clinBD9C.NotificacionesD</IdLocation>
 <IndexLocation>^cysnet.clinBD9C.NotificacionesI</IndexLocation>
+<Property name="%%CLASSNAME">
+<AverageFieldSize>2</AverageFieldSize>
+<OutlierSelectivity>.999999:</OutlierSelectivity>
+<Selectivity>0.0001%</Selectivity>
+</Property>
+<Property name="%%ID">
+<AverageFieldSize>3</AverageFieldSize>
+<Selectivity>1</Selectivity>
+</Property>
+<Property name="asunto">
+<AverageFieldSize>6</AverageFieldSize>
+<OutlierSelectivity>.999999:"test"</OutlierSelectivity>
+<Selectivity>0.0001%</Selectivity>
+</Property>
+<Property name="idPaciente">
+<AverageFieldSize>3</AverageFieldSize>
+<OutlierSelectivity>.999999:1</OutlierSelectivity>
+<Selectivity>0.0001%</Selectivity>
+</Property>
+<Property name="indEnviado">
+<AverageFieldSize>2</AverageFieldSize>
+<OutlierSelectivity>.999999:0</OutlierSelectivity>
+<Selectivity>0.0001%</Selectivity>
+</Property>
+<Property name="mensaje">
+<AverageFieldSize>6</AverageFieldSize>
+<OutlierSelectivity>.999999:"test"</OutlierSelectivity>
+<Selectivity>0.0001%</Selectivity>
+</Property>
+<SQLMap name="IDKEY">
+<BlockCount>-4</BlockCount>
+</SQLMap>
 <StreamLocation>^cysnet.clinBD9C.NotificacionesS</StreamLocation>
 <Type>%Storage.Persistent</Type>
 }

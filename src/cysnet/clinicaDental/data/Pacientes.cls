@@ -10,8 +10,7 @@ Property apellidos As %String;
 /// Email del paciente
 Property email As %String;
 
-//  Indica si un paciente está dado de baja del sistema
-
+///  Indica si el paciente permite que se le envíen notificaciones por email o no
 Property permiteNotificaciones As %Boolean;
 
 ///  Indica si un paciente está dado de baja del sistema
