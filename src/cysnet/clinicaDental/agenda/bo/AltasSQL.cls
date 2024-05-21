@@ -45,6 +45,10 @@ Method altaPaciente(pRequest As cysnet.clinicaDental.msg.altaPacienteRequest, Ou
                 set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
             }
     }
+    if ($$$ISERR(sc)) {
+        set pResponse.exito = 0
+        set pResponse.mensaje = $System.Status.GetErrorText(sc)
+    }
 
     quit $$$OK
 }

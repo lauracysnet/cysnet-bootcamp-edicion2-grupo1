@@ -9,7 +9,7 @@ Property apellidos As %String;
 
 Property email As %String;
 
-Property mensaje As %String;
+Property mensaje As %String(MAXLEN = 250);
 
 Storage Default
 {
