@@ -1,33 +1,53 @@
 Class cysnet.clinicaDental.agenda.bo.PacientesSQL Extends Ens.BusinessOperation
 {
 
+Parameter ADAPTER = "EnsLib.SQL.OutboundAdapter";
+
+Property Adapter As EnsLib.SQL.OutboundAdapter;
+
+Parameter INVOCATION = "Queue";
+
 /// Método que crea un nueva paciente
 Method crearPaciente(pRequest As cysnet.clinicaDental.msg.NuevoPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.NuevoPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
-    #dim stm As %SQL.Statement
-    #dim rs As %SQL.StatementResult
+    #dim rs As EnsLib.SQL.GatewayResultSet
+    #dim numRows As %Integer = 0
+    set numRows = 0
+
     set pResponse = ##class(cysnet.clinicaDental.msg.NuevoPacienteResponse).%New()
     set pResponse.exito = 1
     Try{
-        set stm = ##class(%SQL.Statement).%New()
-        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.email_"'")
-        /// &sql(SELECT * INTO :pResponse() FROM  cysnet_clinicaDental_data.Pacient WHERE email = :pRequest.email)
+        set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
+        set sqlObtener = "SELECT * FROM ClinicaDental.Paciente WHERE Email = ?"
+        set sc = ..Adapter.ExecuteQuery(.rs, sqlObtener, pRequest.email)
         if ($$$ISOK(sc)) {
-            set rs = stm.%Execute()
-            if (rs.%Next(.sc)) {
+            if (rs.Next(.sc)) {
+                quit:$$$ISERR(sc)
                 set pResponse.exito = 0
                 set pResponse.mensaje = "Ya existe paciente con el correo ingresado"
                 return $$$OK
             }
         }
-        &sql(INSERT INTO cysnet_clinicaDental_data.Pacientes (nombre, apellidos, email, permiteNotificaciones, baja) VALUES (:pRequest.nombre, :pRequest.apellidos, :pRequest.email ,:pRequest.permiteNotificaciones, :pRequest.baja))
-        if (SQLCODE = 0) {
-        set pResponse.mensaje = "Bienvenid@ "_pRequest.nombre_" "_pRequest.apellidos
-        set pResponse.id = %ROWID 
-        } else {
-        set pResponse.exito = 0
-        set pResponse.mensaje = $System.SQL.Functions.SQLCODE(SQLCODE)
+        set sqlInsertar = "INSERT INTO ClinicaDental.Paciente (Nombre, Apellidos, Email, PermiteNotificaciones, Baja) VALUES (?, ?, ?, ?, ?)"
+        set sc = ..Adapter.ExecuteUpdate(.numRows, sqlInsertar, pRequest.nombre, pRequest.apellidos, pRequest.email, pRequest.permiteNotificaciones, pRequest.baja)
+        if ($$$ISOK(sc)) {
+            if (numRows > 0) {
+                set pResponse.exito = 1
+                set pResponse.mensaje = "Bienvenid@ "_pRequest.nombre_" "_pRequest.apellidos
+                set sc = ..Adapter.ExecuteQuery(.rs, "SELECT LAST_INSERT_ID() AS LastID")
+                        if ($$$ISOK(sc)) {
+                if (rs.Next(.sc)) {
+                    set pResponse.id = rs.Get("LastID")
+                } else {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "No se encuentra el identificador"
+                }
+            }
+            } else {
+                set pResponse.exito = 0
+                set pResponse.mensaje = "No se insertó ningula fila"
+            }
         }
     } Catch (err) {
        // Si ha ocurrido un error, crear el objeto Status:
@@ -48,21 +68,21 @@ Method crearPaciente(pRequest As cysnet.clinicaDental.msg.NuevoPacienteRequest, 
 Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.BajaPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.BajaPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
-    #dim stm As %SQL.Statement
-    #dim rs As %SQL.StatementResult
+    #dim rs As EnsLib.SQL.GatewayResultSet
+    #dim numRows As %Integer = 0
     set pResponse = ##class(cysnet.clinicaDental.msg.BajaPacienteResponse).%New()
     set pResponse.exito = 1
     Try {
-        set stm = ##class(%SQL.Statement).%New()
-        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.email_"'")
-        /// &sql(SELECT * INTO :pResponse() FROM  cysnet_clinicaDental_data.Pacient WHERE email = :pRequest.email)
+        set sqlTraerPaciente = "SELECT * FROM ClinicaDental.Paciente WHERE Email = ?"
+        set sc = ..Adapter.ExecuteQuery(.rs, sqlTraerPaciente, pRequest.email)
         if ($$$ISOK(sc)) {
-            set rs = stm.%Execute()
             if (rs.%Next(.sc)) {
-                set sc = stm.%Prepare("UPDATE cysnet_clinicaDental_data.Pacientes SET baja = 1 WHERE email = "_"'"_pRequest.email_"'")
+                quit:$$$ISERR(sc)
+                set sqlBajaPaciente = "UPDATE ClinicaDental.Paciente SET Baja = 1 WHERE Email = ?"
+                set sc = ..Adapter.ExecuteUpdate(.numRows, sqlBajaPaciente, pRequest.email)
                 if ($$$ISOK(sc)) {
-                    set rs = stm.%Execute()
-                    if (rs.%SQLCODE = 0) {
+                    quit:$$$ISERR(sc)
+                    if (numRows > 0) {
                         set pResponse.mensaje = "Se dió de baja al paciente con el correo: "_pRequest.email
                     }
                 } 
@@ -93,37 +113,43 @@ Method bajaPaciente(pRequest As cysnet.clinicaDental.msg.BajaPacienteRequest, Ou
 Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.ModificarPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
-    #dim stm As %SQL.Statement
-    #dim rs As %SQL.StatementResult
+    #dim rs As EnsLib.SQL.GatewayResultSet
+    #dim numRows As %Integer = 0
+    set numRows = 0
     set pResponse = ##class(cysnet.clinicaDental.msg.ModificarPacienteResponse).%New()
     set pResponse.exito = 1
-    set pResponse.mensaje = "Actualizado correctamente"
     Try{
         if (pRequest.conservarCorreo) {
-            &sql(UPDATE cysnet_clinicaDental_data.Pacientes SET nombre = :pRequest.nombre, apellidos = :pRequest.apellidos, email = :pRequest.emailAcutal, permiteNotificaciones = :pRequest.permiteNotificaciones WHERE email = :pRequest.emailAcutal)
-            if (SQLCODE = 0) {
-                // La instrucción ha ido bien
-            } else {
-                set pResponse.exito = 0
-                set pResponse.mensaje = $System.SQL.Functions.SQLCODE(SQLCODE)
+            set sqlActualizar = "UPDATE ClinicaDental.Paciente SET Nombre = ?, Apellidos = ?, Email = ?, PermiteNotificaciones = ? WHERE Email = ?"
+            set sc = ..Adapter.ExecuteUpdate(.numRows, sqlActualizar, pRequest.nombre, pRequest.apellidos, pRequest.emailAcutal, pRequest.permiteNotificaciones, pRequest.emailAcutal)
+            if ($$$ISOK(sc)) {
+                if (numRows > 0) {
+                } else {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "No se actualizó ningun paciente"
+                }
             }
         } else {
-            set stm = ##class(%SQL.Statement).%New()
-            set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE email = "_"'"_pRequest.nuevoEmail_"'")
+            set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
+            set sqlObtener = "SELECT * FROM ClinicaDental.Paciente WHERE Email = ?"
+            set sc = ..Adapter.ExecuteQuery(.rs, sqlObtener, pRequest.nuevoEmail)
             if ($$$ISOK(sc)) {
-                set rs = stm.%Execute()
-                if (rs.%Next(.sc)) {
+                if (rs.Next(.sc)) {
+                    quit:$$$ISERR(sc)
                     set pResponse.exito = 0
                     set pResponse.mensaje = "Ya existe paciente con el correo ingresado"
                     return $$$OK
-                } 
+                }
             }
-            &sql(UPDATE cysnet_clinicaDental_data.Pacientes SET nombre = :pRequest.nombre, apellidos = :pRequest.apellidos, email = :pRequest.nuevoEmail, permiteNotificaciones = :pRequest.permiteNotificaciones WHERE email = :pRequest.emailAcutal)
-            if (SQLCODE = 0) {
-                // La instrucción ha ido bien
-            } else {
-                set pResponse.exito = 0
-                set pResponse.mensaje = $System.SQL.Functions.SQLCODE(SQLCODE)
+            set sqlActualizar = "UPDATE ClinicaDental.Paciente SET Nombre = ?, Apellidos = ?, Email = ?, PermiteNotificaciones = ? WHERE Email = ?"
+            set sc = ..Adapter.ExecuteUpdate(.numRows, sqlActualizar, pRequest.nombre, pRequest.apellidos, pRequest.nuevoEmail, pRequest.permiteNotificaciones, pRequest.emailAcutal)
+            if ($$$ISOK(sc)) {
+                if (numRows > 0) {
+                    set pResponse.mensaje = "Actualizado correctamente"
+                } else {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "No se actualizó ningun paciente"
+                }
             }
         }
     } Catch (err) {
@@ -144,24 +170,23 @@ Method modificarPaciente(pRequest As cysnet.clinicaDental.msg.ModificarPacienteR
 Method listarPacientes(pRequest As cysnet.clinicaDental.msg.ListarPacientesRequest, Output pResponse As cysnet.clinicaDental.msg.ListarPacientesResponse) As %Status
 {
     #dim sc As %Status = $$$OK
-    #dim stm As %SQL.Statement
-    #dim rs As %SQL.StatementResult
-    set stm = ##class(%SQL.Statement).%New()
+    #dim rs As EnsLib.SQL.GatewayResultSet
     set pResponse = ##class(cysnet.clinicaDental.msg.ListarPacientesResponse).%New()
     set pResponse.pacientes = ##class(%ListOfObjects).%New()
+
     if (pRequest.mostrarBajas){
-        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes")
+        set sqlTraerPacientes = "SELECT * FROM ClinicaDental.Paciente"
     } else {
-        set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE baja = 0")
+        set sqlTraerPacientes = "SELECT * FROM ClinicaDental.Paciente WHERE Baja = 0"
     }
+    set sc = ..Adapter.ExecuteQuery(.rs, sqlTraerPacientes)
     if ($$$ISOK(sc)) {
-        set rs = stm.%Execute()
         while (rs.%Next()) {
             set paciente = ##class(cysnet.clinicaDental.msg.struct.Pacientes).%New()
-            set paciente.nombre = rs.nombre
-            set paciente.apellidos = rs.apellidos
-            set paciente.email = rs.email
-            set paciente.permiteNotificaciones = rs.permiteNotificaciones
+            set paciente.nombre = rs.Get("Nombre")
+            set paciente.apellidos = rs.Get("Apellidos")
+            set paciente.email = rs.Get("Email")
+            set paciente.permiteNotificaciones = rs.Get("PermiteNotificaciones")
             do pResponse.pacientes.Insert(paciente)
             kill paciente
         }
@@ -172,20 +197,35 @@ Method listarPacientes(pRequest As cysnet.clinicaDental.msg.ListarPacientesReque
 Method buscarPacientePorID(pRequest As cysnet.clinicaDental.msg.BuscarPacientePorIDRequest, Output pResponse As cysnet.clinicaDental.msg.BuscarPacientePorIDResponse) As %Status
 {
     #dim sc As %Status = $$$OK
-    #dim stm As %SQL.Statement
-    #dim rs As %SQL.StatementResult
-    set stm = ##class(%SQL.Statement).%New()
+    #dim rs As EnsLib.SQL.GatewayResultSet
     set pResponse = ##class(cysnet.clinicaDental.msg.BuscarPacientePorIDResponse).%New()
-    set sc = stm.%Prepare("SELECT * FROM cysnet_clinicaDental_data.Pacientes WHERE ID = "_pRequest.id)
-    set rs = stm.%Execute()
-    if (rs.%Next(.sc)) {
-        set pResponse.id = rs.ID
-        set pResponse.nombre = rs.nombre
-        set pResponse.apellidos = rs.apellidos
-        set pResponse.email = rs.email
-        set pResponse.mensaje = "Exitoso"
-    } else {
-        set pResponse.mensaje = "No se encontró ningun paciente con el ID digitado"
+    Try{
+        set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
+        set sqlObtener = "SELECT * FROM ClinicaDental.Paciente WHERE IdPaciente = ?"
+        set sc = ..Adapter.ExecuteQuery(.rs, sqlObtener, pRequest.id)
+        if ($$$ISOK(sc)) {
+            if (rs.Next(.sc)) {
+                quit:$$$ISERR(sc)
+                set pResponse.mensaje = "Exitoso"
+                set pResponse.id = rs.Get("IdPaciente")
+                set pResponse.nombre = rs.Get("Nombre")
+                set pResponse.apellidos = rs.Get("Apellidos")
+                set pResponse.email = rs.Get("Email")
+                return $$$OK
+            } else {
+                set pResponse.mensaje = "No se encontró ningun paciente con el ID digitado"
+            }
+        }
+    } Catch (err) {
+       // Si ha ocurrido un error, crear el objeto Status:
+        if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
+	        set sc = err.status
+        } else {
+	        set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
+        }
+    }
+    if ($$$ISERR(sc)) {
+        set pResponse.mensaje = $System.Status.GetErrorText(sc)
     }
     quit $$$OK
 }
