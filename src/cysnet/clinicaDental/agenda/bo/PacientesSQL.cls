@@ -1,6 +1,12 @@
 Class cysnet.clinicaDental.agenda.bo.PacientesSQL Extends Ens.BusinessOperation
 {
 
+Parameter ADAPTER = "EnsLib.SQL.OutboundAdapter";
+
+Property Adapter As EnsLib.SQL.OutboundAdapter;
+
+Parameter INVOCATION = "Queue";
+
 /// Método que crea un nueva paciente
 Method crearPaciente(pRequest As cysnet.clinicaDental.msg.NuevoPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.NuevoPacienteResponse) As %Status
 {
