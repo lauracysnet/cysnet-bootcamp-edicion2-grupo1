@@ -1,7 +1,7 @@
 Class cysnet.clinicaDental.agenda.bo.AdmisionesSQL Extends Ens.BusinessOperation
 {
 
-Method admitirPaciente(pRequest As cysnet.clinicaDental.msg.admitirPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.admitirPacienteResponse) As %Status
+Method admitirPaciente(pRequest As cysnet.clinicaDental.msg.altaPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.admitirPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
     #dim stm As %SQL.Statement
@@ -38,6 +38,10 @@ Method admitirPaciente(pRequest As cysnet.clinicaDental.msg.admitirPacienteReque
             } else {
                 set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
             }
+    }
+    if ($$$ISERR(sc)) {
+        set pResponse.exito = 0
+        set pResponse.mensaje = $System.Status.GetErrorText(sc)
     }
 
     quit $$$OK
