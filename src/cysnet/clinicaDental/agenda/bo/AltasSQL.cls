@@ -1,42 +1,36 @@
 Class cysnet.clinicaDental.agenda.bo.AltasSQL Extends Ens.BusinessOperation
 {
 
-Parameter ADAPTER = "EnsLib.SQL.OutboundAdapter";
-
-Property Adapter As EnsLib.SQL.OutboundAdapter;
-
-Parameter INVOCATION = "Queue";
-
 Method altaPaciente(pRequest As cysnet.clinicaDental.msg.altaPacienteRequest, Output pResponse As cysnet.clinicaDental.msg.altaPacienteResponse) As %Status
 {
     #dim sc As %Status = $$$OK
-    #dim numRows As %Integer = 0
+    #dim stm As %SQL.Statement
+    #dim rs As %SQL.StatementResult
 
     set pResponse = ##class(cysnet.clinicaDental.msg.altaPacienteResponse).%New()
     set pResponse.exito = 1
         Try {
-                set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
-                set sql = "SELECT a.IdCita FROM  ClinicaDental.Admision a JOIN ClinicaDental.Cita c  ON a.IdCita = c.IdCita WHERE c.IdPaciente = ? AND c.IdCita = ? "
-                set sc = ..Adapter.ExecuteQuery(.rs, sql,pRequest.idPaciente, pRequest.idCita)
 
+         Set stm = ##class(%SQL.Statement).%New()
+         set sc = stm.%Prepare("SELECT a.idCita FROM cysnet_clinicaDental_data.Admisiones a JOIN cysnet_clinicaDental_data.Citas c  ON a.idCita = c.ID WHERE c.idPaciente = "_pRequest.idPaciente _" AND c.ID = "_pRequest.idCita)
+        if ($$$ISOK(sc)) {
+         Set rs = stm.%Execute()
          if (rs.%Next(.sc)){
-                set sql2 = "INSERT INTO ClinicaDental.Alta (IdCita, FechaAlta, IndEnviada) VALUES (?, ?, ?)"
-                set sc = ..Adapter.ExecuteUpdate(.numRows, sql2, pRequest.idCita, pRequest.fechaAltas, pRequest.indEnviada)
-
-              if ($$$ISOK(sc)) {
-                    if (numRows = 0) {
-                        set pResponse.exito = 0
-                        set pResponse.error = "No se ha insertado ninguna fila"
-                    } else {
-                        set pResponse.mensaje = "Registro exitoso"
-                    }
-                }
-            
-          } Else {
-                    Set pResponse.mensaje = "No se ha admitido el paciente en la cita"
+            quit:$$$ISERR(sc)
+            &sql(INSERT INTO cysnet_clinicaDental_data.Altas (idCita, fechaAltas, indEnviada) VALUES (:pRequest.idCita, :pRequest.fechaAltas, :pRequest.indEnviada))
+         } Else {
+                    Set pResponse.mensaje = "No existen admisiones para ese identificador ("_pRequest.idPersona_")"
                 }
         }
-        
+         
+        if (SQLCODE = 0) {
+        // La instrucción ha ido bien
+        } else {
+            set pResponse.exito = 0
+            set pResponse.error = $System.SQL.Functions.SQLCODE(SQLCODE)
+        }
+       
+    }
     Catch (err) {
         // Si ha ocurrido un error, crear el objeto Status:
             if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
