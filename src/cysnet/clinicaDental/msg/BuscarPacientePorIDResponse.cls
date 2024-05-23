@@ -9,6 +9,8 @@ Property apellidos As %String;
 
 Property email As %String;
 
+Property permiteNotificaciones As %Boolean;
+
 Property mensaje As %String(MAXLEN = 250);
 
 Storage Default
@@ -29,6 +31,9 @@ Storage Default
 </Value>
 <Value name="5">
 <Value>id</Value>
+</Value>
+<Value name="6">
+<Value>permiteNotificaciones</Value>
 </Value>
 </Data>
 <DefaultData>BuscarPacientePorIDResponseDefaultData</DefaultData>
