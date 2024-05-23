@@ -211,6 +211,7 @@ Method buscarPacientePorID(pRequest As cysnet.clinicaDental.msg.BuscarPacientePo
                 set pResponse.nombre = rs.Get("Nombre")
                 set pResponse.apellidos = rs.Get("Apellidos")
                 set pResponse.email = rs.Get("Email")
+                set pResponse.permiteNotificaciones = rs.Get("PermiteNotificaciones")
                 return $$$OK
             } else {
                 set pResponse.mensaje = "No se encontró ningun paciente con el ID digitado"
