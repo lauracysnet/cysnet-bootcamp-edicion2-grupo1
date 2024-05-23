@@ -16,12 +16,12 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='resultadoRegla' type='%Boolean' initialexpression='0' instantiate='0' />
 <property name='mensajeHL7' type='EnsLib.HL7.Message' instantiate='0' />
 </context>
-<sequence xend='200' yend='1250' >
+<sequence xend='200' yend='1350' >
 <assign name="Asignar Request" property="context.objRequest" value="request" action="set" xpos='200' ypos='250' />
 <assign name="Asignar nombreClase" property="context.nombreClase" value="request.%ClassName()" action="set" xpos='200' ypos='350' />
-<if name='Datos correctos?' condition='context.resultadoRegla = 0' xpos='200' ypos='450' xend='200' yend='1150' >
+<if name='Datos correctos?' condition='context.resultadoRegla = 0' xpos='200' ypos='450' xend='200' yend='1250' >
 <true>
-<switch name='Tipo de transaccion' xpos='335' ypos='600' xend='335' yend='1050' >
+<switch name='Tipo de transaccion' xpos='335' ypos='600' xend='335' yend='1150' >
 <case condition='request.%ClassName() = "cancelarCitaRequest"' name='cancelar cita' >
 <call name='Cancelar cita' target='CitasSQL' async='0' xpos='470' ypos='750' >
 <request type='cysnet.clinicaDental.msg.cancelarCitaRequest' >
@@ -51,8 +51,12 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="response" value="callresponse" action="set" />
 </response>
 </call>
-<transform name='Tranformarn S12' class='cysnet.clinicaDental.agenda.bp.InfoNuevaCitaSIU12' source='context.objRequest' target='context.mensajeHL7' xpos='1010' ypos='850' />
-<call name='Enviar HL7 cita nueva' target='OutFileHL7' async='1' xpos='1010' ypos='950' >
+<call name='obtener paciente' target='ProcesoPacientes' async='0' xpos='1010' ypos='850' >
+<request type='cysnet.clinicaDental.msg.BuscarPacientePorIDRequest' />
+<response type='Ens.Response' />
+</call>
+<transform name='Tranformarn S12' class='cysnet.clinicaDental.agenda.bp.InfoNuevaCitaSIU12' source='context.objRequest' target='context.mensajeHL7' xpos='1010' ypos='950' />
+<call name='Enviar HL7 cita nueva' target='OutFileHL7' async='1' xpos='1010' ypos='1050' >
 <request type='EnsLib.HL7.Message' >
 <assign property="callrequest" value="context.mensajeHL7" action="set" />
 </request>

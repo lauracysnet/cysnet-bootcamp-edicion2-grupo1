@@ -14,6 +14,7 @@ XData DTL [ XMLNamespace = "http://www.intersystems.com/dtl" ]
 <assign value='"IRIS"' property='target.{MSH:SendingFacility}' action='set' />
 <assign value='"CLINICADENTAL"' property='target.{MSH:ReceivingApplication}' action='set' />
 <assign value='"SIU"' property='target.{MSH:MessageType.MessageCode}' action='set' />
+<assign value='$ZDATETIME($HOROLOG,1,5)' property='target.{MSH:DateTimeOfMessage}' action='set' />
 <assign value='source.idPaciente' property='target.{PIDgrp(1).PID:PatientID.IDNumber}' action='set' />
 <assign value='source.descCita' property='target.{SCH:AppointmentReason.Text}' action='set' />
 <assign value='source.fechaCita' property='target.{SCH:AppointmentTimingQuantity(1).StartDateTime}' action='set' />
