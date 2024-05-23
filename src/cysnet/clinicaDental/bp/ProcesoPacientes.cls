@@ -77,15 +77,6 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <response type='cysnet.clinicaDental.msg.EnviarEmailResponse' />
 </call>
 </true>
-<false>
-<call name='Enviar email baja' target='EnviarEmail' async='0' xpos='1280' ypos='1100' >
-<request type='cysnet.clinicaDental.msg.EnviarEmailRequest' >
-<assign property="callrequest.mensaje" value="response.mensaje" action="set" />
-<assign property="callrequest.asunto" value="&quot;Baja paciente&quot;" action="set" />
-</request>
-<response type='cysnet.clinicaDental.msg.EnviarEmailResponse' />
-</call>
-</false>
 </if>
 </case>
 <case condition='request.%ClassName() = "NuevoPacienteRequest"' name='Nuevo Paciente ' >
