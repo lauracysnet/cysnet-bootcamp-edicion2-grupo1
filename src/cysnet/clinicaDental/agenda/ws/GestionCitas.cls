@@ -22,7 +22,7 @@ Method altaCita(idPaciente As %BigInt, descCita As %String, fechaCita As %TimeSt
     set req.fechaCita = fechaCita
     set req.codEstado = 1
 
-    do ..SendRequestSync("CitasSQL", req, .rsp)
+    do ..SendRequestSync("¨ProcesoCitas", req, .rsp)
     
     quit rsp
 }

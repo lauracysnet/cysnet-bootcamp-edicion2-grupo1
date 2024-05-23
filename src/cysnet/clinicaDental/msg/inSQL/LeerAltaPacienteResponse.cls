@@ -1,4 +1,4 @@
-Class cysnet.clinicaDental.msg.CrearAltaCitaResponse Extends Ens.Response
+Class cysnet.clinicaDental.msg.inSQL.LeerAltaPacienteResponse Extends Ens.Response
 {
 
 Property mensaje As %String(MAXLEN = "");
@@ -9,8 +9,8 @@ Property error As %String(MAXLEN = "");
 
 Storage Default
 {
-<Data name="CrearAltaCitaResponseDefaultData">
-<Subscript>"CrearAltaCitaResponse"</Subscript>
+<Data name="LeerAltaPacienteResponseDefaultData">
+<Subscript>"LeerAltaPacienteResponse"</Subscript>
 <Value name="1">
 <Value>mensaje</Value>
 </Value>
@@ -21,7 +21,7 @@ Storage Default
 <Value>error</Value>
 </Value>
 </Data>
-<DefaultData>CrearAltaCitaResponseDefaultData</DefaultData>
+<DefaultData>LeerAltaPacienteResponseDefaultData</DefaultData>
 <Type>%Storage.Persistent</Type>
 }
 
