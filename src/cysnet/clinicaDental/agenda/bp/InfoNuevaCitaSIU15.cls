@@ -1,4 +1,4 @@
-Class cysnet.clinicaDental.agenda.bp.InfoNuevaCitaSIU12 Extends Ens.DataTransformDTL [ DependsOn = (cysnet.clinicaDental.msg.struct.MensajeSIUS12, EnsLib.HL7.Message) ]
+Class cysnet.clinicaDental.agenda.bp.InfoNuevaCitaSIU15 Extends Ens.DataTransformDTL [ DependsOn = (cysnet.clinicaDental.msg.struct.MensajeSIUS12, EnsLib.HL7.Message) ]
 {
 
 Parameter IGNOREMISSINGSOURCE = 1;
@@ -18,7 +18,7 @@ XData DTL [ XMLNamespace = "http://www.intersystems.com/dtl" ]
 <assign value='source.idPaciente' property='target.{PIDgrp(1).PID:PatientID.IDNumber}' action='set' />
 <assign value='source.descCita' property='target.{SCH:AppointmentReason.Text}' action='set' />
 <assign value='source.fechaCita' property='target.{SCH:AppointmentTimingQuantity(1).StartDateTime}' action='set' />
-<assign value='"S12"' property='target.{MSH:MessageType.TriggerEvent}' action='set' />
+<assign value='"S15"' property='target.{MSH:MessageType.TriggerEvent}' action='set' />
 <assign value='"P"' property='target.{MSH:ProcessingID}' action='set' />
 <assign value='"2.5"' property='target.{MSH:VersionID}' action='set' />
 <assign value='source.idCita' property='target.{SCH:PlacerAppointmentID}' action='set' />
