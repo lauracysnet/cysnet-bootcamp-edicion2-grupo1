@@ -22,6 +22,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='mensajeHL7' type='EnsLib.HL7.Message' instantiate='0' />
 <property name='infoCItaPaciente' type='cysnet.clinicaDental.msg.struct.MensajeSIUS12' instantiate='0' />
 <property name='infoAltaP' type='cysnet.clinicaDental.msg.struct.MensajeADT03' instantiate='0' />
+<property name='idPaciente' type='%Integer' initialexpression='0' instantiate='0' />
 </context>
 <sequence xend='200' yend='1650' >
 <assign name="Asignar Request" property="context.objRequest" value="request" action="set" xpos='200' ypos='250' />
@@ -30,7 +31,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <true>
 <switch name='Tipo de transaccion' xpos='335' ypos='600' xend='335' yend='1450' >
 <case condition='request.%ClassName() = "cancelarCitaRequest"' name='cancelar cita' >
-<call name='Cancelar cita' target='CitasSQL' async='0' xpos='470' ypos='750' >
+<call name='Cancelar cita' target='CitasSQL' async='0' xpos='470' ypos='1000' >
 <request type='cysnet.clinicaDental.msg.cancelarCitaRequest' >
 <assign property="callrequest" value="request" action="set" />
 </request>
@@ -113,6 +114,17 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <response type='EnsLib.HL7.Message' />
 </call>
 </case>
+<case condition='request.%ClassName() = "LeerAdmitirPacienteRequest"' name='admitir paciente' >
+<call name='Admitir paciente' target='AdmisionesSQL' async='0' xpos='1010' ypos='1000' >
+<request type='cysnet.clinicaDental.msg.admitirPacienteRequest' />
+<response type='cysnet.clinicaDental.msg.admitirPacienteResponse' />
+</call>
+</case>
+<default name='default' />
+</switch>
+</true>
+<false>
+<switch name='Tipo de transaccion con paciente' xpos='1415' ypos='850' xend='1415' yend='1400' >
 <case condition='request.%ClassName() = "CrearAltaCitaRequest"' name='nueva cita' >
 <call name='Nueva cita' target='CitasSQL' async='0' xpos='1280' ypos='750' >
 <request type='cysnet.clinicaDental.msg.CrearAltaCitaRequest' >
@@ -145,7 +157,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </case>
 <default name='default' />
 </switch>
-</true>
+</false>
 </if>
 </sequence>
 </process>
