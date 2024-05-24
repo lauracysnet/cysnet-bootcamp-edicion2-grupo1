@@ -17,17 +17,20 @@ Method altaCita(pRequest As cysnet.clinicaDental.msg.CrearAltaCitaRequest, Outpu
         Try {
         set sql = "INSERT INTO ClinicaDental.Cita(IdPaciente, DescCita, FechaCita, CodEstado) VALUES(?, ?, ?, ?)"
         set sc = ..Adapter.ExecuteUpdate(.numRows, sql, pRequest.idPaciente, pRequest.descCita, pRequest.fechaCita, pRequest.codEstado)
-        #;  &sql(INSERT INTO cysnet_clinicaDental_data.Citas (idPaciente, descCita,fechaCita,codEstado) VALUES (:pRequest.idPaciente, :pRequest.descCita, :pRequest.fechaCita, :pRequest.codEstado))
-        #; if (SQLCODE = 0) {
-        #; // La instrucción ha ido bien
-        #; } else {
-        #;     set pResponse.exito = 0
-        #;     set pResponse.error = $System.SQL.Functions.SQLCODE(SQLCODE)
-        #; }
         if ($$$ISOK(sc)) {
             if (numRows = 0) {
                 set pResponse.exito = 0
                 set pResponse.error = "No se ha insertado ninguna fila"
+            } else {
+                set sc = ..Adapter.ExecuteQuery(.rs, "SELECT LAST_INSERT_ID() AS LastID")
+                if ($$$ISOK(sc)) {
+                    if (rs.Next(.sc)) {
+                    set pResponse.idCita = rs.Get("LastID")
+                    }
+                } else {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "No se encuentra el identificador"
+                }
             }
         }
 
@@ -66,14 +69,6 @@ Method cancelarCita(pRequest As cysnet.clinicaDental.msg.cancelarCitaRequest, Ou
                 }
             }
         
-        #;  &sql(UPDATE cysnet_clinicaDental_data.Citas SET codEstado = :pRequest.codEstado WHERE %ID = :pRequest.idCita)
-        #; if (SQLCODE = 0) {
-        #; // La instrucción ha ido bien
-        #; } else {
-        #;     set pResponse.exito = 0
-        #;     set pResponse.error = $System.SQL.Functions.SQLCODE(SQLCODE)
-        #; }
-       
     }
     Catch (err) {
         // Si ha ocurrido un error, crear el objeto Status:
@@ -99,6 +94,35 @@ Method modificarCita(pRequest As cysnet.clinicaDental.msg.modificarCitaRequest, 
     set pResponse = ##class(cysnet.clinicaDental.msg.modificarCitaResponse).%New()
     set pResponse.exito = 1
         Try {
+
+            set sql = "SELECT IdCita, IdPaciente, DescCita, FechaCita FROM ClinicaDental.Cita WHERE IdCita = ? "
+            set sc = ..Adapter.ExecuteQuery(.rs, sql, pRequest.idCita)
+            if ($$$ISOK(sc)) {
+                if ($$$ISOK(sc)) {
+                    if (rs.Next(.sc)) {
+                    set pResponse.idCita = rs.Get("IdCita")
+                    set pResponse.idPaciente = rs.Get("IdPaciente")
+                    set pResponse.descCita = rs.Get("DescCita")
+                    set pResponse.fechaCita = rs.Get("FechaCita")
+
+                    set sql = "UPDATE ClinicaDental.Cita SET FechaCita = ? WHERE idCita = ?"
+                    set sc = ..Adapter.ExecuteUpdate(.numRows, sql, pRequest.fechaCita, pRequest.idCita)
+                    if ($$$ISOK(sc)) {
+                    if (numRows = 0) {
+                        set pResponse.exito = 0
+                        set pResponse.error = "No se ha insertado ninguna fila"
+                    } else {
+                        set pResponse.mensaje = "Registros exitoso"
+                    }
+            }
+                    }
+                } else {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "No se encuentra el identificador de la cita"
+                }
+            }
+
+
             set sql = "UPDATE ClinicaDental.Cita SET fechaCita = ? WHERE idCita = ?"
             set sc = ..Adapter.ExecuteUpdate(.numRows, sql, pRequest.fechaCita, pRequest.idCita)
             if ($$$ISOK(sc)) {
@@ -107,14 +131,6 @@ Method modificarCita(pRequest As cysnet.clinicaDental.msg.modificarCitaRequest, 
                     set pResponse.error = "No se ha insertado ninguna fila"
                 }
             }
-        #;  &sql(UPDATE cysnet_clinicaDental_data.Citas SET fechaCita = :pRequest.fechaCita WHERE %ID = :pRequest.idCita)
-        #; if (SQLCODE = 0) {
-        #; // La instrucción ha ido bien
-        #; } else {
-        #;     set pResponse.exito = 0
-        #;     set pResponse.error = $System.SQL.Functions.SQLCODE(SQLCODE)
-        #; }
-       
     }
     Catch (err) {
         // Si ha ocurrido un error, crear el objeto Status:
@@ -134,30 +150,24 @@ Method modificarCita(pRequest As cysnet.clinicaDental.msg.modificarCitaRequest, 
 
 Method listarCitas(pRequest As cysnet.clinicaDental.msg.listarCitasRequest, Output pResponse As cysnet.clinicaDental.msg.listarCitasResponse) As %Status
 {
-        #; #dim sc As %Status = $$$OK
-        #; #dim stm As %SQL.Statement
-        #; #dim rs As %SQL.StatementResult
 
         Set pResponse = ##class(cysnet.clinicaDental.msg.listarCitasResponse).%New()
         set pResponse.citas = ##class(%ListOfObjects).%New()
 
         try {
-            #; Set stm = ##class(%SQL.Statement).%New()
             set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
             if (pRequest.mostrarBajas = 1) {
                 
                 set sql = "SELECT idCita, idPaciente, descCita, fechaCita, codEstado FROM ClinicaDental.Cita "
                 set sc = ..Adapter.ExecuteQuery(.rs, sql)
-                #; set sc = stm.%Prepare("SELECT ID, idPaciente, descCita, fechaCita, codEstado FROM cysnet_clinicaDental_data.Citas")
             } else {
                     set sql = "SELECT idCita, idPaciente, descCita, fechaCita, codEstado FROM ClinicaDental.Cita WHERE codEstado = 1 "
                     set sc = ..Adapter.ExecuteQuery(.rs, sql)
-                #; set sc = stm.%Prepare("SELECT ID, idPaciente, descCita, fechaCita, codEstado FROM cysnet_clinicaDental_data.Citas WHERE codEstado = 1")
+    
             }
           
             
             if ($$$ISOK(sc)) {
-                #; Set rs = stm.%Execute()
                 while (rs.%Next(.sc)) {
                     quit:$$$ISERR(sc)
                     set cita = ##class(cysnet.clinicaDental.msg.struct.Cita).%New()
