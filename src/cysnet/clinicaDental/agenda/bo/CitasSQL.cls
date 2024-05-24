@@ -182,6 +182,41 @@ Method listarCitas(pRequest As cysnet.clinicaDental.msg.listarCitasRequest, Outp
         quit $$$OK
 }
 
+Method ConsultarCitaPorId(pRequest As cysnet.clinicaDental.msg.ConsulatCitaPorIdRequest, Output pResponse As cysnet.clinicaDental.msg.ConsulatCitaPorIdResponse) As %Status
+{
+    #dim sc As %Status = $$$OK
+    #dim rs As EnsLib.SQL.GatewayResultSet
+    set pResponse = ##class(cysnet.clinicaDental.msg.ConsulatCitaPorIdResponse).%New()
+    Try {
+        set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
+        set sqlObtener = "SELECT * FROM ClinicaDental.Cita WHERE IdCita = ?"
+        set sc = ..Adapter.ExecuteQuery(.rs, sqlObtener, pRequest.idCita)
+        if ($$$ISOK(sc)) {
+            if (rs.Next(.sc)) {
+                quit:$$$ISERR(sc)
+                set pResponse.idPaciente = rs.Get("IdPaciente")
+                set pResponse.DescCita = rs.Get("DescCita")
+                set pResponse.FechaCita = rs.Get("FechaCita")
+                set pResponse.codEstado = rs.Get("CodEstado")
+                return $$$OK
+            } else {
+                set pResponse.idCita = 0
+            }
+        }
+    }
+    Catch (err) {
+        if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
+            set sc = err.status
+        } else {
+            set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
+        }
+    }
+    if ($$$ISERR(sc)) {
+        set pResponse.idCita = 0
+    }
+    quit $$$OK
+}
+
 XData MessageMap
 {
 <MapItems>
@@ -196,6 +231,9 @@ XData MessageMap
         </MapItem>
         <MapItem MessageType="cysnet.clinicaDental.msg.listarCitasRequest">
              <Method>listarCitas</Method>
+        </MapItem>
+        <MapItem MessageType="cysnet.clinicaDental.msg.ConsulatCitaPorIdRequest">
+             <Method>ConsultarCitaPorId</Method>
         </MapItem>
 </MapItems>
 }

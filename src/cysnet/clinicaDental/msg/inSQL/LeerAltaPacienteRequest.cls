@@ -5,7 +5,7 @@ Property idAlta As %Integer;
 
 Property idCita As %Integer;
 
-Property fechaAltas As %TimeStamp;
+Property fechaAlta As %TimeStamp;
 
 Storage Default
 {
@@ -22,6 +22,9 @@ Storage Default
 </Value>
 <Value name="4">
 <Value>idAlta</Value>
+</Value>
+<Value name="5">
+<Value>fechaAlta</Value>
 </Value>
 </Data>
 <DefaultData>LeerAltaPacienteRequestDefaultData</DefaultData>
