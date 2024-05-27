@@ -48,7 +48,16 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.infoAltaP.idPaciente" value="callresponse.idPaciente" action="set" />
 </response>
 </call>
-<call name='obtener paciente Alta' target='ProcesoPacientes' async='0' xpos='740' ypos='850' >
+<call name='Obtener Admision con cita' target='AdmisionesSQL' async='0' xpos='740' ypos='850' >
+<request type='cysnet.clinicaDental.msg.ConsularAdmisionPorIdRequest' >
+<assign property="callrequest.idCita" value="request.idCita" action="set" />
+</request>
+<response type='cysnet.clinicaDental.msg.ConsularAdmisionPorIdResponse' >
+<assign property="context.infoAltaP.idAdmision" value="callresponse.idAdmision" action="set" />
+<assign property="context.infoAltaP.fechaAdmision" value="callresponse.fechaAdmision" action="set" />
+</response>
+</call>
+<call name='obtener paciente Alta' target='ProcesoPacientes' async='0' xpos='740' ypos='950' >
 <request type='cysnet.clinicaDental.msg.BuscarPacientePorIDRequest' >
 <assign property="callrequest.id" value="context.infoAltaP.idPaciente" action="set" />
 </request>
@@ -57,9 +66,9 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.infoAltaP.apellidos" value="callresponse.apellidos" action="set" />
 </response>
 </call>
-<assign name="Asignar fechaAlta" property="context.infoAltaP.fechaAlta" value="request.fechaAlta" action="set" xpos='740' ypos='950' />
-<transform name='Transforma ADTA03' class='cysnet.clinicaDental.agenda.bp.InfoAltaPacienteToADTA03' source='context.infoAltaP' target='context.mensajeHL7' xpos='740' ypos='1050' />
-<call name='Enviar HL7 Alta' target='OutFileHL7' async='0' xpos='740' ypos='1150' >
+<assign name="Asignar fechaAlta" property="context.infoAltaP.fechaAlta" value="request.fechaAlta" action="set" xpos='740' ypos='1050' />
+<transform name='Transforma ADTA03' class='cysnet.clinicaDental.agenda.bp.InfoAltaPacienteToADTA03' source='context.infoAltaP' target='context.mensajeHL7' xpos='740' ypos='1150' />
+<call name='Enviar HL7 Alta' target='OutFileHL7' async='0' xpos='740' ypos='1250' >
 <request type='EnsLib.HL7.Message' >
 <assign property="callrequest" value="context.mensajeHL7" action="set" />
 </request>
