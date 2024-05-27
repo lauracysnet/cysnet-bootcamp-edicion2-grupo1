@@ -217,9 +217,9 @@ Method ConsultarCitaPorId(pRequest As cysnet.clinicaDental.msg.ConsulatCitaPorId
     }
     Catch (err) {
         if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
-            set sc = err.status
+	        set sc = err.status
         } else {
-            set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
+	        set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
         }
     }
     if ($$$ISERR(sc)) {

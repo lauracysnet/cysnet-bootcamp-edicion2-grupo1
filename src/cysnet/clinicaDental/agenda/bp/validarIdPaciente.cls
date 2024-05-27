@@ -13,7 +13,7 @@ XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 <return>objRequest.idPaciente</return>
 </when>
 <when condition="nombreClase=&quot;altaPacienteRequest&quot;" comment="">
-<return>()</return>
+<return>1</return>
 </when>
 <when condition="nombreClase=&quot;CrearAltaCitaRequest&quot;" comment="">
 <return>objRequest.idPaciente</return>
