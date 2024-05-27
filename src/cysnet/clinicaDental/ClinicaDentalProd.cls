@@ -65,20 +65,6 @@ XData ProductionDefinition
   </Item>
   <Item Name="ProcesoCitas" Category="" ClassName="cysnet.clinicaDental.agenda.bp.ProcesoCitas" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
-  <Item Name="InSQLAltas" Category="" ClassName="cysnet.clinicaDental.agenda.bo.bs.InSQLAltas" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
-    <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
-    <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
-    <Setting Target="Adapter" Name="DeleteQuery">UPDATE ClinicaDental.Alta 
-SET IndEnviada = 1 
-WHERE IdAlta= ?</Setting>
-    <Setting Target="Adapter" Name="KeyFieldName">IdAlta</Setting>
-    <Setting Target="Adapter" Name="Query">SELECT *
-FROM ClinicaDental.Alta 
-WHERE IndEnviada = 0 
-ORDER BY IdAlta</Setting>
-    <Setting Target="Adapter" Name="JDBCDriver">com.mysql.jdbc.Driver</Setting>
-    <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
-  </Item>
   <Item Name="InSQLAdmisiones" Category="" ClassName="cysnet.clinicaDental.agenda.bo.bs.InSQLAdmisiones" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
     <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
