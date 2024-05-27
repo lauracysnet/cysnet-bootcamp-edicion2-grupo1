@@ -44,15 +44,6 @@ XData ProductionDefinition
     <Setting Target="Host" Name="ClassPath">/shared/mysql/mysql-connector-java-5.1.49.jar</Setting>
     <Setting Target="Host" Name="JavaHome">/usr/lib/jvm/temurin-8-jdk-amd64</Setting>
   </Item>
-  <Item Name="InSQLAltas" Category="" ClassName="cysnet.clinicaDental.agenda.bo.bs.InSQLAltas" PoolSize="0" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
-    <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
-    <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
-    <Setting Target="Adapter" Name="JDBCDriver">com.mysql.jdbc.Driver</Setting>
-    <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
-    <Setting Target="Adapter" Name="DeleteQuery">UPDATE ClinicaDental.Alta SET IndEnviada = 1 WHERE IdAlta = ?</Setting>
-    <Setting Target="Adapter" Name="KeyFieldName">IdAlta</Setting>
-    <Setting Target="Adapter" Name="Query">SELECT IdAlta, IdCita, FechaAlta  FROM ClinicaDental.Alta WHERE IndEnviada = 0 ORDER BY IdAlta</Setting>
-  </Item>
   <Item Name="OutFileHL7" Category="" ClassName="EnsLib.HL7.Operation.FileOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="FilePath">/shared/HL7/salida-HL7/</Setting>
   </Item>
@@ -66,6 +57,20 @@ XData ProductionDefinition
     <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
     <Setting Target="Adapter" Name="KeyFieldName">IdAdmision</Setting>
     <Setting Target="Adapter" Name="Query">SELECT *  FROM ClinicaDental.Admision WHERE IndEnviada = 0 ORDER BY IdAdmision</Setting>
+  </Item>
+  <Item Name="InSQLAltas" Category="" ClassName="cysnet.clinicaDental.agenda.bo.bs.InSQLAltas" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
+    <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
+    <Setting Target="Adapter" Name="DeleteQuery">UPDATE ClinicaDental.Alta 
+SET IndEnviada = 1 
+WHERE IdAlta= ?</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName">IdAlta</Setting>
+    <Setting Target="Adapter" Name="Query">SELECT *
+FROM ClinicaDental.Alta 
+WHERE IndEnviada = 0 
+ORDER BY IdAlta</Setting>
+    <Setting Target="Adapter" Name="JDBCDriver">com.mysql.jdbc.Driver</Setting>
+    <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
   </Item>
 </Production>
 }
