@@ -7,7 +7,7 @@ Property Adapter As EnsLib.SQL.OutboundAdapter;
 
 Parameter INVOCATION = "Queue";
 
-/// MÃ©todo que crea una nueva notificacion de bienvenida
+/// Método que crea una nueva notificacion de bienvenida
 Method agregarNotificacionBienvenida(pRequest As cysnet.clinicaDental.msg.AgregarNotificacionBienvenidaRequest, Output pResponse As cysnet.clinicaDental.msg.AgregarNotificacionBienvenidaResponse) As %Status
 {
     #dim sc As %Status = $$$OK
