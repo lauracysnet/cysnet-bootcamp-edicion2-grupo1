@@ -40,9 +40,9 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="response" value="callresponse" action="set" />
 </response>
 </call>
-<call name='Notificar cancelación' target='NotificacionesSQL' async='0' xpos='470' ypos='850' >
+<call name='Notificar cancelacion' target='NotificacionesSQL' async='0' xpos='470' ypos='850' >
 <request type='cysnet.clinicaDental.msg.AgregarNotificacionBienvenidaRequest' >
-<assign property="callrequest.asunto" value="&quot;Cancelación de cita&quot;" action="set" />
+<assign property="callrequest.asunto" value="&quot;Cancelacion de cita&quot;" action="set" />
 <assign property="callrequest.indEnviado" value="0" action="set" />
 <assign property="callrequest.mensaje" value="&quot;Su cita ha sido cancelada&quot;" action="set" />
 <assign property="callrequest.idPaciente" value="response.idPaciente" action="set" />
@@ -184,10 +184,10 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </request>
 <response type='EnsLib.HL7.Message' />
 </call>
-<call name='Notificar modificación' target='NotificacionesSQL' async='0' xpos='1550' ypos='1450' >
+<call name='Notificar modifacion' target='NotificacionesSQL' async='0' xpos='1550' ypos='1450' >
 <request type='cysnet.clinicaDental.msg.AgregarNotificacionBienvenidaRequest' >
 <assign property="callrequest.asunto" value="&quot;Cita modificada&quot;" action="set" />
-<assign property="callrequest.mensaje" value="&quot;Su cita se ha modificado" action="set" />
+<assign property="callrequest.mensaje" value="&quot;Cita modificada&quot;"  action="set" />
 <assign property="callrequest.indEnviado" value="0" action="set" />
 <assign property="callrequest.idPaciente" value="context.infoCItaPaciente.idPaciente" action="set" />
 </request>
