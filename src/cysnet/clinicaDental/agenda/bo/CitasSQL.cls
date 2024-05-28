@@ -60,14 +60,31 @@ Method cancelarCita(pRequest As cysnet.clinicaDental.msg.cancelarCitaRequest, Ou
     set pResponse = ##class(cysnet.clinicaDental.msg.cancelarCitaResponse).%New()
     set pResponse.exito = 1
         Try {
+
+            set sql = "SELECT IdCita, IdPaciente, DescCita, FechaCita FROM ClinicaDental.Cita WHERE IdCita = ? "
+            set sc = ..Adapter.ExecuteQuery(.rs, sql, pRequest.idCita)
+            if ($$$ISOK(sc)) {
+                if ($$$ISOK(sc)) {
+                    if (rs.Next(.sc)) {
+                    set pResponse.idPaciente = rs.Get("IdPaciente")
+
             set sql = "UPDATE ClinicaDental.Cita SET codEstado = ? WHERE idCita = ?"
             set sc = ..Adapter.ExecuteUpdate(.numRows, sql, pRequest.codEstado, pRequest.idCita)
             if ($$$ISOK(sc)) {
                 if (numRows = 0) {
                     set pResponse.exito = 0
                     set pResponse.error = "No se ha insertado ninguna fila"
+                } else {
+                        set pResponse.mensaje = "Registros exitoso"
+                    }
+            }
+                    }
+                } else {
+                    set pResponse.exito = 0
+                    set pResponse.mensaje = "No se encuentra el identificador de la cita"
                 }
             }
+            
         
     }
     Catch (err) {
@@ -123,14 +140,14 @@ Method modificarCita(pRequest As cysnet.clinicaDental.msg.modificarCitaRequest, 
             }
 
 
-            set sql = "UPDATE ClinicaDental.Cita SET fechaCita = ? WHERE idCita = ?"
-            set sc = ..Adapter.ExecuteUpdate(.numRows, sql, pRequest.fechaCita, pRequest.idCita)
-            if ($$$ISOK(sc)) {
-                if (numRows = 0) {
-                    set pResponse.exito = 0
-                    set pResponse.error = "No se ha insertado ninguna fila"
-                }
-            }
+            #; set sql = "UPDATE ClinicaDental.Cita SET fechaCita = ? WHERE idCita = ?"
+            #; set sc = ..Adapter.ExecuteUpdate(.numRows, sql, pRequest.fechaCita, pRequest.idCita)
+            #; if ($$$ISOK(sc)) {
+            #;     if (numRows = 0) {
+            #;         set pResponse.exito = 0
+            #;         set pResponse.error = "No se ha insertado ninguna fila"
+            #;     }
+            #; }
     }
     Catch (err) {
         // Si ha ocurrido un error, crear el objeto Status:
