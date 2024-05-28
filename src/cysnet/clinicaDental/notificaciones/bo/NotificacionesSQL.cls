@@ -7,7 +7,7 @@ Property Adapter As EnsLib.SQL.OutboundAdapter;
 
 Parameter INVOCATION = "Queue";
 
-/// Método que crea una nueva notificacion de bienvenida
+/// MÃ©todo que crea una nueva notificacion de bienvenida
 Method agregarNotificacionBienvenida(pRequest As cysnet.clinicaDental.msg.AgregarNotificacionBienvenidaRequest, Output pResponse As cysnet.clinicaDental.msg.AgregarNotificacionBienvenidaResponse) As %Status
 {
     #dim sc As %Status = $$$OK
@@ -26,6 +26,7 @@ Method agregarNotificacionBienvenida(pRequest As cysnet.clinicaDental.msg.Agrega
                 set pResponse.mensaje = "Ver trace"
             }
         }
+       // Si ha ocurrido un error, crear el objeto Status:
     } Catch (err) {
        // Si ha ocurrido un error, crear el objeto Status:
         if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
