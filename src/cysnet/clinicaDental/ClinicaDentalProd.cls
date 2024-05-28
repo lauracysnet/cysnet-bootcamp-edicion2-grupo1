@@ -17,6 +17,10 @@ XData ProductionDefinition
   <Item Name="AltasSQL" Category="" ClassName="cysnet.clinicaDental.agenda.bo.AltasSQL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
   <Item Name="CitasSQL" Category="" ClassName="cysnet.clinicaDental.agenda.bo.CitasSQL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
+    <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
+    <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
+    <Setting Target="Adapter" Name="JDBCDriver">com.mysql.jdbc.Driver</Setting>
   </Item>
   <Item Name="PacientesSQL" Category="" ClassName="cysnet.clinicaDental.agenda.bo.PacientesSQL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
     <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
@@ -55,6 +59,42 @@ XData ProductionDefinition
     <Setting Target="Adapter" Name="Recipient">llanotaborda@gmail.com</Setting>
   </Item>
   <Item Name="ProcesoNotificaciones" Category="" ClassName="cysnet.clinicaDental.bp.ProcesoNotificaciones" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="OutFileHL7" Category="" ClassName="EnsLib.HL7.Operation.FileOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FilePath">/shared/HL7/salida-HL7/</Setting>
+  </Item>
+  <Item Name="ProcesoCitas" Category="" ClassName="cysnet.clinicaDental.agenda.bp.ProcesoCitas" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="InSQLAltas" Category="" ClassName="cysnet.clinicaDental.agenda.bo.bs.InSQLAltas" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
+    <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
+    <Setting Target="Adapter" Name="DeleteQuery">UPDATE ClinicaDental.Alta 
+SET IndEnviada = 1 
+WHERE IdAlta= ?</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName">IdAlta</Setting>
+    <Setting Target="Adapter" Name="Query">SELECT *
+FROM ClinicaDental.Alta 
+WHERE IndEnviada = 0 
+ORDER BY IdAlta</Setting>
+    <Setting Target="Adapter" Name="JDBCDriver">com.mysql.jdbc.Driver</Setting>
+    <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
+  </Item>
+  <Item Name="InSQLAdmisiones" Category="" ClassName="cysnet.clinicaDental.agenda.bo.bs.InSQLAdmisiones" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Credentials">MySQL</Setting>
+    <Setting Target="Adapter" Name="DSN">jdbc:mysql://mysql:3306/iris?useSSL=false</Setting>
+    <Setting Target="Adapter" Name="DeleteQuery">UPDATE ClinicaDental.Admision SET IndEnviada = 1 WHERE IdAdmision = ?</Setting>
+    <Setting Target="Adapter" Name="JDBCDriver">com.mysql.jdbc.Driver</Setting>
+    <Setting Target="Adapter" Name="JGService">JavaGateway</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName">IdAdmision</Setting>
+    <Setting Target="Adapter" Name="Query">SELECT * FROM ClinicaDental.Admision WHERE IndEnviada = 0 ORDER BY IdAdmision</Setting>
+  </Item>
+  <Item Name="AlertOperation" Category="" ClassName="EnsLib.EMail.AlertOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Credentials">CuentaGmail</Setting>
+    <Setting Target="Adapter" Name="From">jllano@cidenet.com.co</Setting>
+    <Setting Target="Adapter" Name="Recipient">llanotaborda@gmail.com</Setting>
+    <Setting Target="Adapter" Name="SMTPPort">587</Setting>
+    <Setting Target="Adapter" Name="SMTPServer">smtp.gmail.com</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">ISC.FeatureTracker.SSL.Config*</Setting>
   </Item>
 </Production>
 }

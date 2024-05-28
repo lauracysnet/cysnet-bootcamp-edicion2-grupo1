@@ -47,11 +47,48 @@ Method admitirPaciente(pRequest As cysnet.clinicaDental.msg.altaPacienteRequest,
     quit $$$OK
 }
 
+Method ConsultarAdmisionPorId(pRequest As cysnet.clinicaDental.msg.ConsularAdmisionPorIdRequest, Output pResponse As cysnet.clinicaDental.msg.ConsularAdmisionPorIdResponse) As %Status
+{
+    #dim sc As %Status = $$$OK
+    #dim rs As EnsLib.SQL.GatewayResultSet
+    set pResponse = ##class(cysnet.clinicaDental.msg.ConsularAdmisionPorIdResponse).%New()
+    Try {
+        set rs = ##class(EnsLib.SQL.GatewayResultSet).%New()
+        set sqlObtener = "SELECT * FROM ClinicaDental.Admision WHERE IdCita = ?"
+        set sc = ..Adapter.ExecuteQuery(.rs, sqlObtener, pRequest.idCita)
+        if ($$$ISOK(sc)) {
+            if (rs.Next(.sc)) {
+                quit:$$$ISERR(sc)
+                set pResponse.idAdmision = rs.Get("IdAdmision")
+                set pResponse.idCita = rs.Get("IdCita")
+                set pResponse.fechaAdmision = rs.Get("FechaAdmision")
+                return $$$OK
+            } else {
+                set pResponse.idAdmision = 0
+            }
+        }
+    }
+    Catch (err) {
+        if (err.%ClassName(1)="common.err.exception") && ($$$ISERR(err.status)) {
+            set sc = err.status
+        } else {
+            set sc = $System.Status.Error(err.Code,err.Name,err.Location,err.InnerException)
+        }
+    }
+    if ($$$ISERR(sc)) {
+        set pResponse.idAdmision = 0
+    }
+    quit $$$OK
+}
+
 XData MessageMap
 {
 <MapItems>
         <MapItem MessageType="cysnet.clinicaDental.msg.admitirPacienteRequest">
              <Method>admitirPaciente</Method>
+        </MapItem>
+        <MapItem MessageType="cysnet.clinicaDental.msg.ConsularAdmisionPorIdRequest">
+             <Method>ConsultarAdmisionPorId</Method>
         </MapItem>
 </MapItems>
 }
