@@ -25,6 +25,9 @@ Storage Default
 <Value name="4">
 <Value>codEstado</Value>
 </Value>
+<Value name="5">
+<Value>idCita</Value>
+</Value>
 </Data>
 <DefaultData>ConsulatCitaPorIdResponseDefaultData</DefaultData>
 <Type>%Storage.Persistent</Type>

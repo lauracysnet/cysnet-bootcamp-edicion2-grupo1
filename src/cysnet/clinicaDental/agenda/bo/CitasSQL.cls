@@ -1,6 +1,12 @@
 Class cysnet.clinicaDental.agenda.bo.CitasSQL Extends Ens.BusinessOperation
 {
 
+Parameter ADAPTER = "EnsLib.SQL.OutboundAdapter";
+
+Property Adapter As EnsLib.SQL.OutboundAdapter;
+
+Parameter INVOCATION = "Queue";
+
 Method altaCita(pRequest As cysnet.clinicaDental.msg.CrearAltaCitaRequest, Output pResponse As cysnet.clinicaDental.msg.CrearAltaCitaResponse) As %Status
 {
     #dim sc As %Status = $$$OK
@@ -200,7 +206,7 @@ Method ConsultarCitaPorId(pRequest As cysnet.clinicaDental.msg.ConsulatCitaPorId
                 set pResponse.codEstado = rs.Get("CodEstado")
                 return $$$OK
             } else {
-                set pResponse.idCita = 0
+                set pResponse.DescCita = $System.Status.GetErrorText(sc)
             }
         }
     }
@@ -212,7 +218,7 @@ Method ConsultarCitaPorId(pRequest As cysnet.clinicaDental.msg.ConsulatCitaPorId
         }
     }
     if ($$$ISERR(sc)) {
-        set pResponse.idCita = 0
+       set pResponse.DescCita = $System.Status.GetErrorText(sc)
     }
     quit $$$OK
 }
